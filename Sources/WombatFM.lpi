@@ -54,7 +54,7 @@
   <CompilerOptions>
     <Version Value="11"/>
     <Target>
-      <Filename Value="WombatFM"/>
+      <Filename Value="../WombatFM"/>
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir)"/>
