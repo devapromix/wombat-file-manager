@@ -1,0 +1,86 @@
+object MainForm: TMainForm
+  Left = 300
+  Height = 500
+  Top = 200
+  Width = 756
+  Caption = 'Wombat File Manager'
+  ClientHeight = 500
+  ClientWidth = 756
+  Position = poScreenCenter
+  LCLVersion = '4.8.0.0'
+  OnCreate = FormCreate
+  object tlbMain: TToolBar
+    Left = 0
+    Height = 24
+    Top = 0
+    Width = 756
+    AutoSize = True
+    Caption = 'tlbMain'
+    ShowCaptions = True
+    TabOrder = 0
+    object tbBack: TToolButton
+      Left = 1
+      Top = 2
+      Caption = 'Back'
+      OnClick = tbBackClick
+    end
+    object tbForward: TToolButton
+      Left = 34
+      Top = 2
+      Caption = 'Forward'
+      OnClick = tbForwardClick
+    end
+    object tbUp: TToolButton
+      Left = 85
+      Top = 2
+      Caption = 'Up'
+      OnClick = tbUpClick
+    end
+    object tbHome: TToolButton
+      Left = 108
+      Top = 2
+      Caption = 'Home'
+      OnClick = tbHomeClick
+    end
+    object tbRefresh: TToolButton
+      Left = 149
+      Top = 2
+      Caption = 'Refresh'
+      OnClick = tbRefreshClick
+    end
+  end
+  inline FilePanel1: TFilePanelFrame
+    Height = 476
+    Top = 24
+    Width = 756
+    Align = alClient
+    ClientHeight = 476
+    ClientWidth = 756
+    TabOrder = 1
+    inherited sbStatus: TStatusBar
+      Top = 453
+      Width = 756
+    end
+    inherited pnlDrives: TPanel
+      Width = 756
+      ClientWidth = 756
+      inherited btnRoot: TButton
+        Left = 722
+      end
+    end
+    inherited pnlPath: TPanel
+      Width = 756
+      ClientWidth = 756
+      inherited btnBrowse: TButton
+        Left = 722
+      end
+      inherited cbPath: TComboBox
+        Width = 722
+      end
+    end
+    inherited lvFiles: TListView
+      Height = 407
+      Width = 756
+    end
+  end
+end

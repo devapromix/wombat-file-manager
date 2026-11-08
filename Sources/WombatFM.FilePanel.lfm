@@ -1,0 +1,110 @@
+object FilePanelFrame: TFilePanelFrame
+  Left = 0
+  Height = 400
+  Top = 0
+  Width = 768
+  ClientHeight = 400
+  ClientWidth = 768
+  LCLVersion = '4.8.0.0'
+  TabOrder = 0
+  object sbStatus: TStatusBar
+    Left = 0
+    Height = 23
+    Top = 377
+    Width = 768
+    Panels = <>
+  end
+  object pnlDrives: TPanel
+    Left = 0
+    Height = 23
+    Top = 0
+    Width = 768
+    Align = alTop
+    BevelOuter = bvNone
+    ClientHeight = 23
+    ClientWidth = 768
+    TabOrder = 1
+    object btnRoot: TButton
+      Left = 734
+      Height = 23
+      Top = 0
+      Width = 34
+      Align = alRight
+      Caption = '\'
+      TabOrder = 0
+      OnClick = btnRootClick
+      OnEnter = ControlActivated
+    end
+  end
+  object pnlPath: TPanel
+    Left = 0
+    Height = 23
+    Top = 23
+    Width = 768
+    Align = alTop
+    BevelOuter = bvNone
+    ClientHeight = 23
+    ClientWidth = 768
+    TabOrder = 2
+    object btnBrowse: TButton
+      Left = 734
+      Height = 23
+      Top = 0
+      Width = 34
+      Align = alRight
+      Caption = '...'
+      TabOrder = 0
+      OnClick = btnBrowseClick
+      OnEnter = ControlActivated
+    end
+    object cbPath: TComboBox
+      Left = 0
+      Height = 23
+      Top = 0
+      Width = 734
+      Align = alClient
+      ItemHeight = 15
+      TabOrder = 1
+      OnEnter = ControlActivated
+      OnKeyDown = cbPathKeyDown
+      OnSelect = cbPathSelect
+    end
+  end
+  object lvFiles: TListView
+    Left = 0
+    Height = 331
+    Top = 46
+    Width = 768
+    Align = alClient
+    Columns = <    
+      item
+        Caption = 'Name'
+        Width = 260
+      end    
+      item
+        Caption = 'Ext'
+        Width = 60
+      end    
+      item
+        Caption = 'Size'
+        Width = 100
+      end    
+      item
+        Caption = 'Date'
+        Width = 130
+      end>
+    MultiSelect = True
+    ReadOnly = True
+    RowSelect = True
+    TabOrder = 3
+    ViewStyle = vsReport
+    OnColumnClick = lvFilesColumnClick
+    OnDblClick = lvFilesDblClick
+    OnEnter = ControlActivated
+    OnKeyDown = lvFilesKeyDown
+  end
+  object dlgSelectDir: TSelectDirectoryDialog
+    Left = 280
+    Top = 160
+  end
+end

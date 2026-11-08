@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <ProjectSession>
+    <PathDelim Value="\"/>
+    <Version Value="12"/>
+    <BuildModes Active="Default"/>
+    <Units>
+      <Unit>
+        <Filename Value="WombatFM.lpr"/>
+        <IsPartOfProject Value="True"/>
+        <UsageCount Value="22"/>
+      </Unit>
+      <Unit>
+        <Filename Value="WombatFM.MainForm.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="MainForm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <CursorPos X="44" Y="14"/>
+        <UsageCount Value="22"/>
+        <Loaded Value="True"/>
+        <LoadedDesigner Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="WombatFM.FilePanel.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="FilePanelFrame"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Frame"/>
+        <IsVisibleTab Value="True"/>
+        <EditorIndex Value="1"/>
+        <CursorPos Y="276"/>
+        <UsageCount Value="22"/>
+        <Loaded Value="True"/>
+        <LoadedDesigner Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="WombatFM.Drives.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UsageCount Value="22"/>
+      </Unit>
+    </Units>
+    <JumpHistory HistoryIndex="5">
+      <Position>
+        <Filename Value="WombatFM.MainForm.pas"/>
+        <Caret Line="14" Column="44"/>
+      </Position>
+      <Position>
+        <Filename Value="WombatFM.FilePanel.pas"/>
+        <Caret Line="265" Column="30" TopLine="239"/>
+      </Position>
+      <Position>
+        <Filename Value="WombatFM.FilePanel.pas"/>
+        <Caret Line="63" Column="20" TopLine="56"/>
+      </Position>
+      <Position>
+        <Filename Value="WombatFM.FilePanel.pas"/>
+        <Caret Line="46" Column="6" TopLine="32"/>
+      </Position>
+      <Position>
+        <Filename Value="WombatFM.FilePanel.pas"/>
+        <Caret Line="60" Column="24" TopLine="47"/>
+      </Position>
+      <Position>
+        <Filename Value="WombatFM.FilePanel.pas"/>
+        <Caret Line="359" Column="17" TopLine="346"/>
+      </Position>
+    </JumpHistory>
+    <RunParams>
+      <FormatVersion Value="2"/>
+      <Modes ActiveMode=""/>
+    </RunParams>
+  </ProjectSession>
+</CONFIG>
