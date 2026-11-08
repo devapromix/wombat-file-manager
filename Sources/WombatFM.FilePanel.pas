@@ -121,6 +121,16 @@ begin
   Result := Result + ' ' + CUnits[LUnit];
 end;
 
+{$PUSH}
+{$WARN SYMBOL_PLATFORM OFF}
+function GetIsHiddenEntry(AAttr: longint): boolean;
+const
+  CHiddenAttributes = faHidden or faSysFile;
+begin
+  Result := (AAttr and CHiddenAttributes) <> 0;
+end;
+{$POP}
+
 function GetFolderAge(const APath: string): longint;
 var
   LRec: TSearchRec;
@@ -429,7 +439,7 @@ begin
     repeat
       LIsFolder := (LRec.Attr and faDirectory) <> 0;
       if (LRec.Name <> '.') and (LRec.Name <> CParentName) and
-        (FOptionShowHidden or ((LRec.Attr and (faHidden or faSysFile)) = 0)) then
+        (FOptionShowHidden or not GetIsHiddenEntry(LRec.Attr)) then
       begin
         InsertEntry(TFileEntry.Create(LRec.Name, LIsFolder, LRec.Size,
           LRec.Time));
@@ -569,7 +579,7 @@ end;
 procedure TFilePanelFrame.cbPathKeyDown(Sender: TObject; var Key: word;
   Shift: TShiftState);
 begin
-  if Key = VK_RETURN then
+  if (Key = VK_RETURN) and (Shift = []) then
   begin
     Key := 0;
     NavigateTo(cbPath.Text);
@@ -642,7 +652,7 @@ end;
 procedure TFilePanelFrame.lvFilesKeyDown(Sender: TObject; var Key: word;
   Shift: TShiftState);
 begin
-  if Key = VK_RETURN then
+  if (Key = VK_RETURN) and (Shift = []) then
   begin
     Key := 0;
     OpenSelected;
