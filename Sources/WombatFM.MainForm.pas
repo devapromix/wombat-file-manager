@@ -37,6 +37,7 @@ procedure TMainForm.FormCreate(Sender: TObject);
 begin
   FilePanel1.OnActivate := @PanelActivate;
   FilePanel1.GoHome;
+  ActiveControl := FilePanel1.lvFiles;
 end;
 
 procedure TMainForm.PanelActivate(Sender: TObject);
