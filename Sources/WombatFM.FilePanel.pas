@@ -6,7 +6,8 @@ interface
 
 uses
   Classes, SysUtils, Contnrs, Math, Graphics, Forms, Controls, StdCtrls,
-  ExtCtrls, ComCtrls, Buttons, Dialogs, LCLType, LazUTF8, WombatFM.Drives, WombatFM.Icons;
+  ExtCtrls, ComCtrls, Buttons, Dialogs, LCLType, LazUTF8, WombatFM.Drives,
+  WombatFM.History, WombatFM.Icons;
 
 type
   TFileEntry = class
@@ -42,8 +43,7 @@ type
     procedure lvFilesKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
   private
     FCurrentPath: string;
-    FBackStack: TStringList;
-    FForwardStack: TStringList;
+    FHistory: TPathHistory;
     FEntries: TFPObjectList;
     FOnActivate: TNotifyEvent;
     FOptionShowHidden: boolean;
@@ -60,7 +60,7 @@ type
     function GetSelectionName(const ANewPath: string): string;
     procedure InsertEntry(AEntry: TFileEntry);
     procedure LoadDirectory(const APath: string);
-    procedure MoveHistory(ASource, ATarget: TStringList);
+    procedure MoveHistory(ADirection: THistoryDirection);
     procedure OpenSelected;
     procedure ReportFolderError(const APath: string);
     procedure SelectEntry(const AName: string);
@@ -87,7 +87,6 @@ implementation
 {$R *.lfm}
 
 const
-  CMaxPathHistory = 20;
   CDriveButtonWidth = 36;
   CParentName = '..';
   CColumnExt = 1;
@@ -192,8 +191,7 @@ end;
 constructor TFilePanelFrame.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
-  FBackStack := TStringList.Create;
-  FForwardStack := TStringList.Create;
+  FHistory := TPathHistory.Create;
   FEntries := TFPObjectList.Create(True);
   lvFiles.SmallImages := GetIconList;
   CreateDriveButtons;
@@ -203,8 +201,7 @@ end;
 destructor TFilePanelFrame.Destroy;
 begin
   FEntries.Free;
-  FForwardStack.Free;
-  FBackStack.Free;
+  FHistory.Free;
   inherited Destroy;
 end;
 
@@ -256,15 +253,8 @@ begin
 end;
 
 procedure TFilePanelFrame.AddToHistory;
-var
-  LIndex: integer;
 begin
-  LIndex := cbPath.Items.IndexOf(FCurrentPath);
-  if LIndex >= 0 then
-    cbPath.Items.Delete(LIndex);
-  cbPath.Items.Insert(0, FCurrentPath);
-  while cbPath.Items.Count > CMaxPathHistory do
-    cbPath.Items.Delete(cbPath.Items.Count - 1);
+  AddRecentPath(cbPath.Items, FCurrentPath);
   cbPath.Text := FCurrentPath;
 end;
 
@@ -476,37 +466,35 @@ begin
   end;
   if (FCurrentPath <> '') and (FCurrentPath <> LPath) then
   begin
-    FBackStack.Add(FCurrentPath);
-    FForwardStack.Clear;
+    FHistory.AddVisit(FCurrentPath);
   end;
   LoadDirectory(LPath);
 end;
 
-procedure TFilePanelFrame.MoveHistory(ASource, ATarget: TStringList);
+procedure TFilePanelFrame.MoveHistory(ADirection: THistoryDirection);
 var
   LPath: string;
 begin
-  if ASource.Count = 0 then
+  FHistory.Pop(ADirection, LPath);
+  if LPath = '' then
     Exit;
-  LPath := ASource[ASource.Count - 1];
-  ASource.Delete(ASource.Count - 1);
   if not GetIsDirectoryAccessible(LPath) then
   begin
     ReportFolderError(LPath);
     Exit;
   end;
-  ATarget.Add(FCurrentPath);
+  FHistory.Push(GetOppositeDirection(ADirection), FCurrentPath);
   LoadDirectory(LPath);
 end;
 
 procedure TFilePanelFrame.GoBack;
 begin
-  MoveHistory(FBackStack, FForwardStack);
+  MoveHistory(hdBack);
 end;
 
 procedure TFilePanelFrame.GoForward;
 begin
-  MoveHistory(FForwardStack, FBackStack);
+  MoveHistory(hdForward);
 end;
 
 procedure TFilePanelFrame.GoUp;

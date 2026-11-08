@@ -7,6 +7,8 @@ object FilePanelFrame: TFilePanelFrame
   ClientWidth = 768
   LCLVersion = '4.8.0.0'
   TabOrder = 0
+  DesignLeft = 358
+  DesignTop = 189
   object sbStatus: TStatusBar
     Left = 0
     Height = 23
