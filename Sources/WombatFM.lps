@@ -49,7 +49,6 @@
       </Unit>
       <Unit>
         <Filename Value="WombatFM.FilePanel.lfm"/>
-        <IsPartOfProject Value="True"/>
         <EditorIndex Value="-1"/>
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
@@ -59,7 +58,6 @@
       </Unit>
       <Unit>
         <Filename Value="WombatFM.lpi"/>
-        <IsPartOfProject Value="True"/>
         <EditorIndex Value="-1"/>
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
@@ -69,7 +67,6 @@
       </Unit>
       <Unit>
         <Filename Value="WombatFM.lps"/>
-        <IsPartOfProject Value="True"/>
         <EditorIndex Value="-1"/>
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
@@ -79,7 +76,6 @@
       </Unit>
       <Unit>
         <Filename Value="WombatFM.MainForm.lfm"/>
-        <IsPartOfProject Value="True"/>
         <EditorIndex Value="-1"/>
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>

@@ -57,6 +57,7 @@ type
     procedure LoadDirectory(const APath: string);
     procedure MoveHistory(ASource, ATarget: TStringList);
     procedure OpenSelected;
+    procedure ReportFolderError(const APath: string);
     procedure SetOptionShowHidden(AValue: boolean);
     procedure UpdateDriveButtons;
     procedure UpdateSortIndicator;
@@ -127,6 +128,22 @@ begin
   end;
 end;
 
+function GetIsDirectoryAccessible(const APath: string): boolean;
+var
+  LRec: TSearchRec;
+begin
+  Result := False;
+  if not DirectoryExists(APath) then
+    Exit;
+  if FindFirst(APath + '*', faAnyFile, LRec) = 0 then
+  begin
+    FindClose(LRec);
+    Result := True;
+  end
+  else
+    Result := APath = ExtractFileDrive(APath) + PathDelim;
+end;
+
 function GetDateText(AFileAge: longint): string;
 begin
   if AFileAge < 0 then
@@ -148,6 +165,8 @@ begin
   begin
     Size := ASize;
     Ext := ExtractFileExt(AName);
+    if Length(Ext) = Length(AName) then
+      Ext := '';
     BaseName := Copy(AName, 1, Length(AName) - Length(Ext));
     Delete(Ext, 1, 1);
   end;
@@ -381,15 +400,20 @@ begin
   sbStatus.SimpleText := Format(CStatusFormat, [LCount, GetSizeText(LTotalSize)]);
 end;
 
+procedure TFilePanelFrame.ReportFolderError(const APath: string);
+begin
+  ShowMessage('Cannot open folder: ' + APath);
+  cbPath.Text := FCurrentPath;
+end;
+
 procedure TFilePanelFrame.NavigateTo(const APath: string);
 var
   LPath: string;
 begin
   LPath := IncludeTrailingPathDelimiter(ExpandFileName(APath));
-  if not DirectoryExists(LPath) then
+  if not GetIsDirectoryAccessible(LPath) then
   begin
-    ShowMessage('Folder not found: ' + APath);
-    cbPath.Text := FCurrentPath;
+    ReportFolderError(APath);
     Exit;
   end;
   if (FCurrentPath <> '') and (FCurrentPath <> LPath) then
@@ -406,9 +430,14 @@ var
 begin
   if ASource.Count = 0 then
     Exit;
-  ATarget.Add(FCurrentPath);
   LPath := ASource[ASource.Count - 1];
   ASource.Delete(ASource.Count - 1);
+  if not GetIsDirectoryAccessible(LPath) then
+  begin
+    ReportFolderError(LPath);
+    Exit;
+  end;
+  ATarget.Add(FCurrentPath);
   LoadDirectory(LPath);
 end;
 
