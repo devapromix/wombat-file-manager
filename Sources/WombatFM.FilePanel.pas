@@ -51,6 +51,7 @@ type
     FSortDescending: boolean;
     procedure AddToHistory;
     procedure CreateDriveButtons;
+    procedure DrawCursorItem(AItem: TListItem);
     procedure DriveButtonClick(Sender: TObject);
     procedure FillList;
     function GetCompareResult(AEntry1, AEntry2: TFileEntry): integer;
@@ -580,25 +581,43 @@ begin
   NavigateTo(cbPath.Text);
 end;
 
+procedure TFilePanelFrame.DrawCursorItem(AItem: TListItem);
+var
+  LIndex: integer;
+  LRect: TRect;
+  LTextTop: integer;
+begin
+  LRect := AItem.DisplayRect(drBounds);
+  lvFiles.Canvas.Brush.Style := bsSolid;
+  lvFiles.Canvas.Brush.Color := lvFiles.Color;
+  lvFiles.Canvas.Font.Color := lvFiles.Font.Color;
+  lvFiles.Canvas.FillRect(LRect);
+  LTextTop := LRect.Top + (LRect.Bottom - LRect.Top -
+    lvFiles.Canvas.TextHeight('Wg')) div 2;
+  if AItem.ImageIndex >= 0 then
+    lvFiles.SmallImages.Draw(lvFiles.Canvas,
+      AItem.DisplayRect(drIcon).Left, LRect.Top, AItem.ImageIndex);
+  LRect := AItem.DisplayRect(drLabel);
+  lvFiles.Canvas.TextRect(LRect, LRect.Left + 2, LTextTop, AItem.Caption);
+  for LIndex := 0 to AItem.SubItems.Count - 1 do
+  begin
+    LRect := AItem.DisplayRectSubItem(LIndex + 1, drBounds);
+    lvFiles.Canvas.TextRect(LRect, LRect.Left + 4, LTextTop,
+      AItem.SubItems[LIndex]);
+  end;
+  lvFiles.Canvas.Brush.Style := bsClear;
+  lvFiles.Canvas.Pen.Color := CCursorColor;
+  lvFiles.Canvas.Rectangle(AItem.DisplayRect(drBounds));
+end;
+
 procedure TFilePanelFrame.lvFilesAdvancedCustomDrawItem(Sender: TCustomListView;
   Item: TListItem; State: TCustomDrawState; Stage: TCustomDrawStage;
   var DefaultDraw: Boolean);
-var
-  LRect: TRect;
 begin
-  if Item <> Sender.ItemFocused then
-    Exit;
-  if Stage = cdPrePaint then
+  if (Stage = cdPrePaint) and (Item = Sender.ItemFocused) then
   begin
-    Sender.Canvas.Brush.Color := Sender.Color;
-    Sender.Canvas.Font.Color := Sender.Font.Color;
-  end
-  else if Stage = cdPostPaint then
-  begin
-    LRect := Item.DisplayRect(drBounds);
-    Sender.Canvas.Brush.Style := bsClear;
-    Sender.Canvas.Pen.Color := CCursorColor;
-    Sender.Canvas.Rectangle(LRect);
+    DrawCursorItem(Item);
+    DefaultDraw := False;
   end;
 end;
 
