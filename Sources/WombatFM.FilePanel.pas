@@ -470,7 +470,7 @@ begin
   LPath := IncludeTrailingPathDelimiter(ExpandFileName(APath));
   if not GetIsFolderAvailable(LPath) then
     Exit;
-  if (FCurrentPath <> '') and (FCurrentPath <> LPath) then
+  if (FCurrentPath <> '') and (CompareFilenames(FCurrentPath, LPath) <> 0) then
     FHistory.AddVisit(FCurrentPath);
   LoadDirectory(LPath);
 end;
