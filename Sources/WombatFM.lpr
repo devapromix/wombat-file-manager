@@ -8,7 +8,7 @@ uses
   {$ENDIF}
   Interfaces,
   Forms,
-  WombatFM.MainForm;
+  WombatFM.MainForm, WombatFM.Icons;
 
 begin
   RequireDerivedFormResource := True;
