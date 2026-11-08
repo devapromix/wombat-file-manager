@@ -53,11 +53,13 @@ type
     function GetCompareResult(AEntry1, AEntry2: TFileEntry): integer;
     function GetInsertIndex(AEntry: TFileEntry): integer;
     function GetParentPath: string;
+    function GetSelectionName(const ANewPath: string): string;
     procedure InsertEntry(AEntry: TFileEntry);
     procedure LoadDirectory(const APath: string);
     procedure MoveHistory(ASource, ATarget: TStringList);
     procedure OpenSelected;
     procedure ReportFolderError(const APath: string);
+    procedure SelectEntry(const AName: string);
     procedure SetOptionShowHidden(AValue: boolean);
     procedure UpdateDriveButtons;
     procedure UpdateSortIndicator;
@@ -362,13 +364,53 @@ begin
     Result := '';
 end;
 
+function TFilePanelFrame.GetSelectionName(const ANewPath: string): string;
+var
+  LRest: string;
+begin
+  Result := '';
+  if FCurrentPath = '' then
+    Exit;
+  if FCurrentPath = ANewPath then
+  begin
+    if lvFiles.Selected <> nil then
+      Result := TFileEntry(lvFiles.Selected.Data).Name;
+  end
+  else if Pos(ANewPath, FCurrentPath) = 1 then
+  begin
+    LRest := Copy(FCurrentPath, Length(ANewPath) + 1, MaxInt);
+    Result := Copy(LRest, 1, Pos(PathDelim, LRest) - 1);
+  end;
+end;
+
+procedure TFilePanelFrame.SelectEntry(const AName: string);
+var
+  LIndex: integer;
+  LItem: TListItem;
+begin
+  if lvFiles.Items.Count = 0 then
+    Exit;
+  LItem := lvFiles.Items[0];
+  for LIndex := 0 to lvFiles.Items.Count - 1 do
+    if TFileEntry(lvFiles.Items[LIndex].Data).Name = AName then
+    begin
+      LItem := lvFiles.Items[LIndex];
+      Break;
+    end;
+  lvFiles.Selected := LItem;
+  lvFiles.ItemFocused := LItem;
+  LItem.MakeVisible(False);
+end;
+
 procedure TFilePanelFrame.LoadDirectory(const APath: string);
 var
   LRec: TSearchRec;
   LIsFolder: boolean;
   LCount: integer;
   LTotalSize: int64;
+  LSelectName: string;
 begin
+  LSelectName := GetSelectionName(APath);
   FCurrentPath := APath;
   LCount := 0;
   LTotalSize := 0;
@@ -395,6 +437,7 @@ begin
     FindClose(LRec);
   end;
   FillList;
+  SelectEntry(LSelectName);
   AddToHistory;
   UpdateDriveButtons;
   sbStatus.SimpleText := Format(CStatusFormat, [LCount, GetSizeText(LTotalSize)]);
