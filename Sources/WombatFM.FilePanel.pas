@@ -6,8 +6,8 @@ interface
 
 uses
   Classes, SysUtils, Contnrs, Math, Graphics, Forms, Controls, StdCtrls,
-  ExtCtrls, ComCtrls, Buttons, Dialogs, LCLType, LazUTF8, WombatFM.Drives,
-  WombatFM.History, WombatFM.Icons;
+  ExtCtrls, ComCtrls, Buttons, Dialogs, LCLType, LazUTF8, LazFileUtils,
+  WombatFM.Drives, WombatFM.History, WombatFM.Icons;
 
 type
   TFileEntry = class
@@ -166,6 +166,11 @@ begin
     Result := ''
   else
     Result := FormatDateTime(CDateFormat, FileDateToDateTime(AFileAge));
+end;
+
+function GetIsPathPrefix(const APrefix, APath: string): Boolean;
+begin
+  Result := CompareFilenames(Copy(APath, 1, Length(APrefix)), APrefix) = 0;
 end;
 
 constructor TFileEntry.Create(const AName: string; AIsFolder: boolean;
@@ -374,14 +379,14 @@ var
   LRest: string;
 begin
   Result := '';
-  if FCurrentPath = '' then
+  if (FCurrentPath = '') or not GetIsPathPrefix(ANewPath, FCurrentPath) then
     Exit;
-  if FCurrentPath = ANewPath then
+  if Length(FCurrentPath) = Length(ANewPath) then
   begin
     if lvFiles.Selected <> nil then
       Result := TFileEntry(lvFiles.Selected.Data).Name;
   end
-  else if Pos(ANewPath, FCurrentPath) = 1 then
+  else
   begin
     LRest := Copy(FCurrentPath, Length(ANewPath) + 1, MaxInt);
     Result := Copy(LRest, 1, Pos(PathDelim, LRest) - 1);

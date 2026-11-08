@@ -1,2 +1,2 @@
-# wombat-file-manager
+# Wombat File Manager
 File manager for Windows
