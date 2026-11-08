@@ -57,7 +57,7 @@ type
     function GetCompareResult(AEntry1, AEntry2: TFileEntry): integer;
     function GetInsertIndex(AEntry: TFileEntry): integer;
     function GetIsFolderAvailable(const APath: string): Boolean;
-    function GetParentPath: string;
+    function GetParentPath(const APath: string): string;
     function GetSelectionName(const ANewPath: string): string;
     procedure InsertEntry(AEntry: TFileEntry);
     procedure LoadDirectory(const APath: string);
@@ -162,10 +162,15 @@ end;
 
 function GetDateText(AFileAge: longint): string;
 begin
+  Result := '';
   if AFileAge < 0 then
-    Result := ''
-  else
+    Exit;
+  try
     Result := FormatDateTime(CDateFormat, FileDateToDateTime(AFileAge));
+  except
+    on EConvertError do
+      Result := '';
+  end;
 end;
 
 function GetIsPathPrefix(const APrefix, APath: string): Boolean;
@@ -364,11 +369,11 @@ begin
   end;
 end;
 
-function TFilePanelFrame.GetParentPath: string;
+function TFilePanelFrame.GetParentPath(const APath: string): string;
 var
   LCurrent: string;
 begin
-  LCurrent := ExcludeTrailingPathDelimiter(FCurrentPath);
+  LCurrent := ExcludeTrailingPathDelimiter(APath);
   Result := ExtractFilePath(LCurrent);
   if Result = LCurrent then
     Result := '';
@@ -419,16 +424,17 @@ var
   LCount: integer;
   LTotalSize: int64;
   LSelectName: string;
+  LParent: string;
 begin
   LSelectName := GetSelectionName(APath);
-  FCurrentPath := APath;
+  LParent := GetParentPath(APath);
   LCount := 0;
   LTotalSize := 0;
   lvFiles.Items.Clear;
   FEntries.Clear;
-  if GetParentPath <> '' then
+  if LParent <> '' then
     InsertEntry(TFileEntry.Create(CParentName, True, 0,
-      GetFolderAge(ExcludeTrailingPathDelimiter(GetParentPath))));
+      GetFolderAge(ExcludeTrailingPathDelimiter(LParent))));
   if FindFirst(APath + '*', faAnyFile, LRec) = 0 then
   try
     repeat
@@ -447,6 +453,7 @@ begin
     FindClose(LRec);
   end;
   FillList;
+  FCurrentPath := APath;
   SelectEntry(LSelectName);
   AddToHistory;
   UpdateDriveButtons;
@@ -500,7 +507,7 @@ procedure TFilePanelFrame.GoUp;
 var
   LParent: string;
 begin
-  LParent := GetParentPath;
+  LParent := GetParentPath(FCurrentPath);
   if LParent <> '' then
     NavigateTo(LParent);
 end;
