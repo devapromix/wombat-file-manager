@@ -56,13 +56,13 @@ type
     procedure FillList;
     function GetCompareResult(AEntry1, AEntry2: TFileEntry): integer;
     function GetInsertIndex(AEntry: TFileEntry): integer;
+    function GetIsFolderAvailable(const APath: string): Boolean;
     function GetParentPath: string;
     function GetSelectionName(const ANewPath: string): string;
     procedure InsertEntry(AEntry: TFileEntry);
     procedure LoadDirectory(const APath: string);
     procedure MoveHistory(ADirection: THistoryDirection);
     procedure OpenSelected;
-    procedure ReportFolderError(const APath: string);
     procedure SelectEntry(const AName: string);
     procedure SetOptionShowHidden(AValue: boolean);
     procedure UpdateDriveButtons;
@@ -448,10 +448,14 @@ begin
   sbStatus.SimpleText := Format(CStatusFormat, [LCount, GetSizeText(LTotalSize)]);
 end;
 
-procedure TFilePanelFrame.ReportFolderError(const APath: string);
+function TFilePanelFrame.GetIsFolderAvailable(const APath: string): Boolean;
 begin
-  ShowMessage('Cannot open folder: ' + APath);
-  cbPath.Text := FCurrentPath;
+  Result := GetIsDirectoryAccessible(APath);
+  if not Result then
+  begin
+    ShowMessage('Cannot open folder: ' + APath);
+    cbPath.Text := FCurrentPath;
+  end;
 end;
 
 procedure TFilePanelFrame.NavigateTo(const APath: string);
@@ -459,15 +463,10 @@ var
   LPath: string;
 begin
   LPath := IncludeTrailingPathDelimiter(ExpandFileName(APath));
-  if not GetIsDirectoryAccessible(LPath) then
-  begin
-    ReportFolderError(APath);
+  if not GetIsFolderAvailable(LPath) then
     Exit;
-  end;
   if (FCurrentPath <> '') and (FCurrentPath <> LPath) then
-  begin
     FHistory.AddVisit(FCurrentPath);
-  end;
   LoadDirectory(LPath);
 end;
 
@@ -476,13 +475,8 @@ var
   LPath: string;
 begin
   FHistory.Pop(ADirection, LPath);
-  if LPath = '' then
+  if (LPath = '') or not GetIsFolderAvailable(LPath) then
     Exit;
-  if not GetIsDirectoryAccessible(LPath) then
-  begin
-    ReportFolderError(LPath);
-    Exit;
-  end;
   FHistory.Push(GetOppositeDirection(ADirection), FCurrentPath);
   LoadDirectory(LPath);
 end;
@@ -513,7 +507,8 @@ end;
 
 procedure TFilePanelFrame.Reload;
 begin
-  LoadDirectory(FCurrentPath);
+  if (FCurrentPath <> '') and GetIsFolderAvailable(FCurrentPath) then
+    LoadDirectory(FCurrentPath);
 end;
 
 procedure TFilePanelFrame.SetActive(AValue: boolean);
@@ -542,8 +537,7 @@ begin
   if FOptionShowHidden = AValue then
     Exit;
   FOptionShowHidden := AValue;
-  if FCurrentPath <> '' then
-    Reload;
+  Reload;
 end;
 
 procedure TFilePanelFrame.ControlActivated(Sender: TObject);

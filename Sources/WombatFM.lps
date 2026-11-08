@@ -84,8 +84,25 @@
         <UsageCount Value="20"/>
         <DefaultSyntaxHighlighter Value="LFM"/>
       </Unit>
+      <Unit>
+        <Filename Value="WombatFM.Icons.pas"/>
+        <IsVisibleTab Value="True"/>
+        <EditorIndex Value="2"/>
+        <TopLine Value="87"/>
+        <CursorPos X="24" Y="102"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit>
     </Units>
+<<<<<<< Updated upstream
     <JumpHistory HistoryIndex="8">
+=======
+<<<<<<< Updated upstream
+    <JumpHistory HistoryIndex="7">
+=======
+    <JumpHistory HistoryIndex="6">
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
       <Position>
         <Filename Value="WombatFM.MainForm.pas"/>
         <Caret Line="14" Column="44"/>
@@ -114,14 +131,20 @@
         <Filename Value="WombatFM.FilePanel.pas"/>
         <Caret Line="17" Column="23"/>
       </Position>
+<<<<<<< Updated upstream
       <Position>
         <Filename Value="WombatFM.Icons.pas"/>
         <Caret Line="127" Column="24" TopLine="88"/>
       </Position>
+<<<<<<< Updated upstream
       <Position>
         <Filename Value="WombatFM.FilePanel.pas"/>
         <Caret Line="3" Column="68"/>
       </Position>
+=======
+=======
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
     </JumpHistory>
     <RunParams>
       <FormatVersion Value="2"/>
