@@ -27,7 +27,6 @@
         <ComponentName Value="FilePanelFrame"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Frame"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
         <CursorPos X="23" Y="17"/>
         <UsageCount Value="22"/>
@@ -39,8 +38,17 @@
         <IsPartOfProject Value="True"/>
         <UsageCount Value="22"/>
       </Unit>
+      <Unit>
+        <Filename Value="WombatFM.Icons.pas"/>
+        <IsVisibleTab Value="True"/>
+        <EditorIndex Value="2"/>
+        <TopLine Value="87"/>
+        <CursorPos X="24" Y="102"/>
+        <UsageCount Value="10"/>
+        <Loaded Value="True"/>
+      </Unit>
     </Units>
-    <JumpHistory HistoryIndex="5">
+    <JumpHistory HistoryIndex="7">
       <Position>
         <Filename Value="WombatFM.MainForm.pas"/>
         <Caret Line="14" Column="44"/>
@@ -64,6 +72,14 @@
       <Position>
         <Filename Value="WombatFM.FilePanel.pas"/>
         <Caret Line="359" Column="17" TopLine="346"/>
+      </Position>
+      <Position>
+        <Filename Value="WombatFM.FilePanel.pas"/>
+        <Caret Line="17" Column="23"/>
+      </Position>
+      <Position>
+        <Filename Value="WombatFM.Icons.pas"/>
+        <Caret Line="127" Column="24" TopLine="88"/>
       </Position>
     </JumpHistory>
     <RunParams>

@@ -14,7 +14,7 @@ function GetParentIconIndex: Integer;
 implementation
 
 uses
-  Classes, SysUtils, Types, Graphics{$IFDEF WINDOWS}, Windows, ShellApi{$ENDIF};
+  Classes, SysUtils, Types{$IFDEF WINDOWS}, Windows, ShellApi{$ENDIF}, Graphics;
 
 const
   CIconSize = 16;
@@ -51,7 +51,7 @@ begin
     LAttr := FILE_ATTRIBUTE_DIRECTORY
   else
     LAttr := FILE_ATTRIBUTE_NORMAL;
-  FillChar(LInfo, SizeOf(LInfo), 0);
+  LInfo := Default(TSHFileInfoW);
   if SHGetFileInfoW(PWideChar(UTF8Decode(AName)), LAttr, LInfo, SizeOf(LInfo),
     SHGFI_ICON or SHGFI_SMALLICON or SHGFI_USEFILEATTRIBUTES) = 0 then
     Exit;
