@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, Contnrs, Math, Graphics, Forms, Controls, StdCtrls,
-  ExtCtrls, ComCtrls, Buttons, Dialogs, LCLType, LazUTF8, WombatFM.Drives;
+  ExtCtrls, ComCtrls, Buttons, Dialogs, LCLType, LazUTF8, WombatFM.Drives, WombatFM.Icons;
 
 type
   TFileEntry = class
@@ -159,6 +159,7 @@ begin
   FBackStack := TStringList.Create;
   FForwardStack := TStringList.Create;
   FEntries := TFPObjectList.Create(True);
+  lvFiles.SmallImages := GetIconList;
   CreateDriveButtons;
   UpdateSortIndicator;
 end;
@@ -298,6 +299,7 @@ var
   LItem: TListItem;
   LCaption: string;
   LSizeText: string;
+  LImageIndex: integer;
 begin
   lvFiles.Items.BeginUpdate;
   try
@@ -314,8 +316,13 @@ begin
         LCaption := LEntry.BaseName;
         LSizeText := GetSizeText(LEntry.Size);
       end;
+      if LEntry.Name = CParentName then
+        LImageIndex := GetParentIconIndex
+      else
+        LImageIndex := GetIconIndex(LEntry.Name, LEntry.IsFolder);
       LItem := lvFiles.Items.Add;
       LItem.Caption := LCaption;
+      LItem.ImageIndex := LImageIndex;
       LItem.Data := LEntry;
       LItem.SubItems.Add(LEntry.Ext);
       LItem.SubItems.Add(LSizeText);
