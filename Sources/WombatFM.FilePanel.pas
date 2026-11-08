@@ -34,6 +34,9 @@ type
     procedure cbPathKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
     procedure cbPathSelect(Sender: TObject);
     procedure ControlActivated(Sender: TObject);
+    procedure lvFilesAdvancedCustomDrawItem(Sender: TCustomListView;
+      Item: TListItem; State: TCustomDrawState; Stage: TCustomDrawStage;
+      var DefaultDraw: Boolean);
     procedure lvFilesColumnClick(Sender: TObject; Column: TListColumn);
     procedure lvFilesDblClick(Sender: TObject);
     procedure lvFilesKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
@@ -92,6 +95,7 @@ const
   CDirText = '<DIR>';
   CDateFormat = 'dd.mm.yyyy hh:nn';
   CStatusFormat = '%d objects (%s)';
+  CCursorColor = clBlack;
 
 function GetSizeText(ASize: int64): string;
 const
@@ -574,6 +578,28 @@ end;
 procedure TFilePanelFrame.cbPathSelect(Sender: TObject);
 begin
   NavigateTo(cbPath.Text);
+end;
+
+procedure TFilePanelFrame.lvFilesAdvancedCustomDrawItem(Sender: TCustomListView;
+  Item: TListItem; State: TCustomDrawState; Stage: TCustomDrawStage;
+  var DefaultDraw: Boolean);
+var
+  LRect: TRect;
+begin
+  if Item <> Sender.ItemFocused then
+    Exit;
+  if Stage = cdPrePaint then
+  begin
+    Sender.Canvas.Brush.Color := Sender.Color;
+    Sender.Canvas.Font.Color := Sender.Font.Color;
+  end
+  else if Stage = cdPostPaint then
+  begin
+    LRect := Item.DisplayRect(drBounds);
+    Sender.Canvas.Brush.Style := bsClear;
+    Sender.Canvas.Pen.Color := CCursorColor;
+    Sender.Canvas.Rectangle(LRect);
+  end;
 end;
 
 procedure TFilePanelFrame.lvFilesColumnClick(Sender: TObject; Column: TListColumn);

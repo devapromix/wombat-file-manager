@@ -93,11 +93,13 @@ object FilePanelFrame: TFilePanelFrame
         Caption = 'Date'
         Width = 130
       end>
+    HideSelection = False
     MultiSelect = True
     ReadOnly = True
     RowSelect = True
     TabOrder = 3
     ViewStyle = vsReport
+    OnAdvancedCustomDrawItem = lvFilesAdvancedCustomDrawItem
     OnColumnClick = lvFilesColumnClick
     OnDblClick = lvFilesDblClick
     OnEnter = ControlActivated
