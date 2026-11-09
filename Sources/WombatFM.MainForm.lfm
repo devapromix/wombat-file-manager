@@ -6,6 +6,7 @@ object MainForm: TMainForm
   Caption = 'Wombat File Manager'
   ClientHeight = 500
   ClientWidth = 756
+  Menu = MainMenu
   Position = poScreenCenter
   LCLVersion = '4.8.0.0'
   OnCreate = FormCreate
@@ -81,6 +82,21 @@ object MainForm: TMainForm
     inherited lvFiles: TListView
       Height = 407
       Width = 756
+    end
+  end
+  object MainMenu: TMainMenu
+    Left = 184
+    Top = 184
+    object miFile: TMenuItem
+      Caption = 'File'
+      object miRefresh: TMenuItem
+        Caption = 'Refresh'
+        OnClick = tbRefreshClick
+      end
+      object miExit: TMenuItem
+        Caption = 'Exit'
+        OnClick = miExitClick
+      end
     end
   end
 end
