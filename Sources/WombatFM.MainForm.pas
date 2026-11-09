@@ -20,6 +20,7 @@ type
     tbRefresh: TToolButton;
     tbUp: TToolButton;
     tlbMain: TToolBar;
+    ToolbarImages: TImageList;
     procedure FormCreate(Sender: TObject);
     procedure miExitClick(Sender: TObject);
     procedure tbBackClick(Sender: TObject);
