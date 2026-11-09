@@ -17,6 +17,7 @@ type
     tbBack: TToolButton;
     tbForward: TToolButton;
     tbHome: TToolButton;
+    tbDownloads: TToolButton;
     tbRefresh: TToolButton;
     tbUp: TToolButton;
     tlbMain: TToolBar;
@@ -26,6 +27,7 @@ type
     procedure tbBackClick(Sender: TObject);
     procedure tbForwardClick(Sender: TObject);
     procedure tbHomeClick(Sender: TObject);
+    procedure tbDownloadsClick(Sender: TObject);
     procedure tbRefreshClick(Sender: TObject);
     procedure tbUpClick(Sender: TObject);
   private
@@ -74,6 +76,15 @@ end;
 procedure TMainForm.tbHomeClick(Sender: TObject);
 begin
   FilePanel1.GoHome;
+end;
+
+procedure TMainForm.tbDownloadsClick(Sender: TObject);
+var
+  LDownloadsPath: string;
+begin
+  LDownloadsPath := IncludeTrailingPathDelimiter(GetUserDir) + 'Downloads';
+  if DirectoryExists(LDownloadsPath) then
+    FilePanel1.NavigateTo(LDownloadsPath);
 end;
 
 procedure TMainForm.tbRefreshClick(Sender: TObject);

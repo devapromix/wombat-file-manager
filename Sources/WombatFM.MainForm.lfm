@@ -51,8 +51,18 @@ object MainForm: TMainForm
       ImageIndex = 3
       OnClick = tbHomeClick
     end
-    object tbRefresh: TToolButton
+    object tbDownloads: TToolButton
       Left = 289
+      Hint = 'Open Downloads folder'
+      Top = 2
+      Caption = 'Downloads'
+      ImageIndex = 3
+      ParentShowHint = False
+      ShowHint = True
+      OnClick = tbDownloadsClick
+    end
+    object tbRefresh: TToolButton
+      Left = 361
       Top = 2
       Caption = 'Refresh'
       ImageIndex = 4
