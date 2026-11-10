@@ -525,5 +525,12 @@ object MainForm: TMainForm
         OnClick = miExitClick
       end
     end
+    object miOptions: TMenuItem
+      Caption = 'Options'
+      object miSettings: TMenuItem
+        Caption = 'Settings...'
+        OnClick = miSettingsClick
+      end
+    end
   end
 end

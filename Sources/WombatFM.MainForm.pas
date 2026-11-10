@@ -5,7 +5,8 @@ unit WombatFM.MainForm;
 interface
 
 uses
-  Classes, SysUtils, Forms, Controls, ComCtrls, ExtCtrls, Menus, WombatFM.FilePanel;
+  Classes, SysUtils, Forms, Controls, ComCtrls, ExtCtrls, Menus, WombatFM.FilePanel,
+  WombatFM.History;
 
 type
   TMainForm = class(TForm)
@@ -16,6 +17,8 @@ type
     miFile: TMenuItem;
     miRefresh: TMenuItem;
     miExit: TMenuItem;
+    miOptions: TMenuItem;
+    miSettings: TMenuItem;
     tbBack: TToolButton;
     tbForward: TToolButton;
     tbHome: TToolButton;
@@ -32,6 +35,7 @@ type
       var Accept: Boolean);
     procedure PanelSplitterMoved(Sender: TObject);
     procedure miExitClick(Sender: TObject);
+    procedure miSettingsClick(Sender: TObject);
     procedure tbBackClick(Sender: TObject);
     procedure tbForwardClick(Sender: TObject);
     procedure tbHomeClick(Sender: TObject);
@@ -43,6 +47,8 @@ type
     FLayoutClientWidth: Integer;
     FPendingLeftPanelWidth: Integer;
     FLeftPanelRatio: Double;
+    FOptions: TAppOptions;
+    procedure ApplyOptions;
     procedure ApplyPanelRatio;
     function ClampLeftPanelWidth(AWidth: Integer): Integer;
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
@@ -55,7 +61,7 @@ var
 implementation
 
 uses
-  Dialogs, LCLType, Math, WombatFM.History;
+  Dialogs, LCLType, Math, WombatFM.Settings;
 
 {$R *.lfm}
 
@@ -72,7 +78,8 @@ begin
   LLeftPath := FilePanel1.cbPath.Text;
   LRightPath := FilePanel2.cbPath.Text;
   try
-    LoadSettings(FilePanel1.cbPath.Items, FilePanel2.cbPath.Items, LLayout);
+    LoadSettings(FilePanel1.cbPath.Items, FilePanel2.cbPath.Items, LLayout, FOptions);
+    ApplyOptions;
     if (LLayout.Width > 0) and (LLayout.Height > 0) then
       SetBounds(Left, Top, Min(LLayout.Width, Screen.WorkAreaWidth),
         Min(LLayout.Height, Screen.WorkAreaHeight));
@@ -164,7 +171,7 @@ begin
   LLayout.Height := Height;
   LLayout.LeftPanelWidth := FilePanel1.Width;
   try
-    SaveSettings(FilePanel1.cbPath.Items, FilePanel2.cbPath.Items, LLayout);
+    SaveSettings(FilePanel1.cbPath.Items, FilePanel2.cbPath.Items, LLayout, FOptions);
   except
     on E: Exception do
       ShowMessage('Could not save settings: ' + E.Message);
@@ -174,6 +181,29 @@ end;
 procedure TMainForm.miExitClick(Sender: TObject);
 begin
   Close;
+end;
+
+procedure TMainForm.ApplyOptions;
+begin
+  FilePanel1.ApplyOptions(FOptions);
+  FilePanel2.ApplyOptions(FOptions);
+end;
+
+procedure TMainForm.miSettingsClick(Sender: TObject);
+var
+  LForm: TSettingsForm;
+begin
+  LForm := TSettingsForm.Create(Self);
+  try
+    LForm.Options := FOptions;
+    if LForm.ShowModal = mrOk then
+    begin
+      FOptions := LForm.Options;
+      ApplyOptions;
+    end;
+  finally
+    LForm.Free;
+  end;
 end;
 
 procedure TMainForm.PanelActivate(Sender: TObject);

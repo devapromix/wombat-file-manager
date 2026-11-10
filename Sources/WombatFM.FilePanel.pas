@@ -46,6 +46,7 @@ type
     FHistory: TPathHistory;
     FEntries: TFPObjectList;
     FOnActivate: TNotifyEvent;
+    FOptionMaxPathHistory: integer;
     FOptionShowHidden: boolean;
     FSortColumn: integer;
     FSortDescending: boolean;
@@ -70,6 +71,7 @@ type
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
+    procedure ApplyOptions(const AOptions: TAppOptions);
     procedure GoBack;
     procedure GoForward;
     procedure GoHome;
@@ -201,6 +203,7 @@ end;
 constructor TFilePanelFrame.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
+  FOptionMaxPathHistory := CDefaultMaxPathHistory;
   FHistory := TPathHistory.Create;
   FEntries := TFPObjectList.Create(True);
   lvFiles.SmallImages := GetIconList;
@@ -264,7 +267,7 @@ end;
 
 procedure TFilePanelFrame.AddToHistory;
 begin
-  AddRecentPath(cbPath.Items, FCurrentPath);
+  AddRecentPath(cbPath.Items, FCurrentPath, FOptionMaxPathHistory);
   cbPath.Text := FCurrentPath;
 end;
 
@@ -542,6 +545,13 @@ begin
     GoUp
   else if LEntry.IsFolder then
     NavigateTo(FCurrentPath + LEntry.Name);
+end;
+
+procedure TFilePanelFrame.ApplyOptions(const AOptions: TAppOptions);
+begin
+  FOptionMaxPathHistory := AOptions.OptionMaxPathHistory;
+  TrimRecentPaths(cbPath.Items, FOptionMaxPathHistory);
+  OptionShowHidden := AOptions.OptionShowHidden;
 end;
 
 procedure TFilePanelFrame.SetOptionShowHidden(AValue: boolean);

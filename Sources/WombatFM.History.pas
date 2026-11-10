@@ -7,11 +7,19 @@ interface
 uses
   Classes, SysUtils;
 
+const
+  CDefaultMaxPathHistory = 20;
+
 type
   TWindowLayout = record
     Width: Integer;
     Height: Integer;
     LeftPanelWidth: Integer;
+  end;
+
+  TAppOptions = record
+    OptionMaxPathHistory: Integer;
+    OptionShowHidden: Boolean;
   end;
 
   THistoryDirection = (hdBack, hdForward);
@@ -28,21 +36,24 @@ type
   end;
 
 function GetOppositeDirection(ADirection: THistoryDirection): THistoryDirection;
-procedure AddRecentPath(AList: TStrings; const APath: string);
+procedure TrimRecentPaths(AList: TStrings; AMaxCount: Integer);
+procedure AddRecentPath(AList: TStrings; const APath: string; AMaxCount: Integer);
 
-procedure LoadSettings(ALeft, ARight: TStrings; out ALayout: TWindowLayout);
-procedure SaveSettings(ALeft, ARight: TStrings; const ALayout: TWindowLayout);
+procedure LoadSettings(ALeft, ARight: TStrings; out ALayout: TWindowLayout;
+  out AOptions: TAppOptions);
+procedure SaveSettings(ALeft, ARight: TStrings; const ALayout: TWindowLayout;
+  const AOptions: TAppOptions);
 
 implementation
 
 uses
-  fpjson, jsonparser, LazFileUtils, LazUTF8{$IFDEF WINDOWS}, Windows{$ENDIF};
+  fpjson, jsonparser, Math, LazFileUtils, LazUTF8{$IFDEF WINDOWS}, Windows{$ENDIF};
 
 const
-  CMaxPathHistory = 20;
   CRecentPathsKey = 'recentPaths';
   CRightRecentPathsKey = 'rightRecentPaths';
   CWindowLayoutKey = 'windowLayout';
+  COptionsKey = 'options';
 
 function SettingsFileName: string;
 begin
@@ -80,7 +91,8 @@ begin
   Result := TJSONObject(LData);
 end;
 
-procedure LoadPathList(ASettings: TJSONObject; const AKey: string; AList: TStrings);
+procedure LoadPathList(ASettings: TJSONObject; const AKey: string; AList: TStrings;
+  AMaxCount: Integer);
 var
   LPaths: TJSONArray;
   LIndex: Integer;
@@ -96,23 +108,39 @@ begin
         (LPaths.Strings[LIndex] <> '') and
         (AList.IndexOf(LPaths.Strings[LIndex]) < 0) then
         AList.Add(LPaths.Strings[LIndex]);
-      if AList.Count = CMaxPathHistory then
-        Break;
     end;
+    TrimRecentPaths(AList, AMaxCount);
   finally
     AList.EndUpdate;
   end;
 end;
 
-procedure LoadSettings(ALeft, ARight: TStrings; out ALayout: TWindowLayout);
+procedure LoadOptions(ASettings: TJSONObject; out AOptions: TAppOptions);
+var
+  LOptions: TJSONObject;
+begin
+  AOptions := Default(TAppOptions);
+  AOptions.OptionMaxPathHistory := CDefaultMaxPathHistory;
+  if ASettings.Find(COptionsKey, LOptions) then
+  begin
+    AOptions.OptionMaxPathHistory :=
+      Max(1, LOptions.Get('maxPathHistory', CDefaultMaxPathHistory));
+    AOptions.OptionShowHidden := LOptions.Get('showHidden', False);
+  end;
+end;
+
+procedure LoadSettings(ALeft, ARight: TStrings; out ALayout: TWindowLayout;
+  out AOptions: TAppOptions);
 var
   LSettings, LLayout: TJSONObject;
 begin
   ALayout := Default(TWindowLayout);
   LSettings := ReadSettings(SettingsFileName);
   try
-    LoadPathList(LSettings, CRecentPathsKey, ALeft);
-    LoadPathList(LSettings, CRightRecentPathsKey, ARight);
+    LoadOptions(LSettings, AOptions);
+    LoadPathList(LSettings, CRecentPathsKey, ALeft, AOptions.OptionMaxPathHistory);
+    LoadPathList(LSettings, CRightRecentPathsKey, ARight,
+      AOptions.OptionMaxPathHistory);
     if LSettings.Find(CWindowLayoutKey, LLayout) then
     begin
       ALayout.Width := LLayout.Get('width', 0);
@@ -136,11 +164,22 @@ begin
     LPaths.Add(AList[LIndex]);
 end;
 
-procedure SaveSettings(ALeft, ARight: TStrings; const ALayout: TWindowLayout);
+function GetSettingsSection(ASettings: TJSONObject; const AKey: string): TJSONObject;
+begin
+  if not ASettings.Find(AKey, Result) then
+  begin
+    ASettings.Delete(AKey);
+    Result := TJSONObject.Create;
+    ASettings.Add(AKey, Result);
+  end;
+end;
+
+procedure SaveSettings(ALeft, ARight: TStrings; const ALayout: TWindowLayout;
+  const AOptions: TAppOptions);
 var
   LFileName, LTempName: string;
   LId: TGUID;
-  LSettings, LLayout: TJSONObject;
+  LSettings, LLayout, LOptions: TJSONObject;
   LText: UTF8String;
   LHandle: THandle;
   LStream: THandleStream;
@@ -150,15 +189,13 @@ begin
   try
     SavePathList(LSettings, CRecentPathsKey, ALeft);
     SavePathList(LSettings, CRightRecentPathsKey, ARight);
-    if not LSettings.Find(CWindowLayoutKey, LLayout) then
-    begin
-      LSettings.Delete(CWindowLayoutKey);
-      LLayout := TJSONObject.Create;
-      LSettings.Add(CWindowLayoutKey, LLayout);
-    end;
+    LLayout := GetSettingsSection(LSettings, CWindowLayoutKey);
     LLayout.Integers['width'] := ALayout.Width;
     LLayout.Integers['height'] := ALayout.Height;
     LLayout.Integers['leftPanelWidth'] := ALayout.LeftPanelWidth;
+    LOptions := GetSettingsSection(LSettings, COptionsKey);
+    LOptions.Integers['maxPathHistory'] := AOptions.OptionMaxPathHistory;
+    LOptions.Booleans['showHidden'] := AOptions.OptionShowHidden;
     LText := LSettings.FormatJSON + LineEnding;
   finally
     LSettings.Free;
@@ -202,7 +239,13 @@ begin
     Result := hdBack;
 end;
 
-procedure AddRecentPath(AList: TStrings; const APath: string);
+procedure TrimRecentPaths(AList: TStrings; AMaxCount: Integer);
+begin
+  while AList.Count > AMaxCount do
+    AList.Delete(AList.Count - 1);
+end;
+
+procedure AddRecentPath(AList: TStrings; const APath: string; AMaxCount: Integer);
 var
   LIndex: integer;
 begin
@@ -210,8 +253,7 @@ begin
   if LIndex >= 0 then
     AList.Delete(LIndex);
   AList.Insert(0, APath);
-  while AList.Count > CMaxPathHistory do
-    AList.Delete(AList.Count - 1);
+  TrimRecentPaths(AList, AMaxCount);
 end;
 
 constructor TPathHistory.Create;

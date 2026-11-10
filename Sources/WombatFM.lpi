@@ -46,6 +46,13 @@
         <ResourceBaseClass Value="Frame"/>
       </Unit>
       <Unit>
+        <Filename Value="WombatFM.Settings.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="SettingsForm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit>
+      <Unit>
         <Filename Value="WombatFM.Drives.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit>
