@@ -41,6 +41,7 @@ type
     procedure lvFilesColumnClick(Sender: TObject; Column: TListColumn);
     procedure lvFilesDblClick(Sender: TObject);
     procedure lvFilesKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
+    procedure pnlDrivesClick(Sender: TObject);
   private
     FCurrentPath: string;
     FHistory: TPathHistory;
@@ -242,9 +243,14 @@ begin
   end;
 end;
 
+procedure TFilePanelFrame.pnlDrivesClick(Sender: TObject);
+begin
+  lvFiles.SetFocus;
+end;
+
 procedure TFilePanelFrame.DriveButtonClick(Sender: TObject);
 begin
-  ControlActivated(Sender);
+  lvFiles.SetFocus;
   NavigateTo((Sender as TSpeedButton).Hint);
 end;
 

@@ -26,11 +26,12 @@ object FilePanelFrame: TFilePanelFrame
     ClientHeight = 23
     ClientWidth = 768
     TabOrder = 1
+    OnClick = pnlDrivesClick
     object btnRoot: TButton
-      Left = 742
+      Left = 734
       Height = 23
       Top = 0
-      Width = 26
+      Width = 34
       Align = alRight
       Caption = '\'
       TabOrder = 0
@@ -49,10 +50,10 @@ object FilePanelFrame: TFilePanelFrame
     ClientWidth = 768
     TabOrder = 2
     object btnBrowse: TButton
-      Left = 742
+      Left = 734
       Height = 23
       Top = 0
-      Width = 26
+      Width = 34
       Align = alRight
       Caption = '...'
       TabOrder = 0
@@ -63,7 +64,7 @@ object FilePanelFrame: TFilePanelFrame
       Left = 0
       Height = 23
       Top = 0
-      Width = 742
+      Width = 734
       Align = alClient
       ItemHeight = 15
       TabOrder = 1
