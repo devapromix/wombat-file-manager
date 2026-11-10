@@ -4,10 +4,10 @@ object MainForm: TMainForm
   Top = 155
   Width = 756
   Caption = 'Wombat File Manager'
-  ClientHeight = 500
+  ClientHeight = 600
   ClientWidth = 756
-  Constraints.MinHeight = 300
-  Constraints.MinWidth = 500
+  Constraints.MinHeight = 600
+  Constraints.MinWidth = 600
   KeyPreview = True
   Menu = MainMenu
   Position = poScreenCenter
@@ -76,15 +76,15 @@ object MainForm: TMainForm
     end
   end
   inline FilePanel1: TFilePanelFrame
-    Height = 434
+    Height = 534
     Top = 66
     Width = 375
     Align = alLeft
-    ClientHeight = 434
+    ClientHeight = 534
     ClientWidth = 375
     TabOrder = 1
     inherited sbStatus: TStatusBar
-      Top = 411
+      Top = 511
       Width = 375
     end
     inherited pnlDrives: TPanel
@@ -105,7 +105,7 @@ object MainForm: TMainForm
       end
     end
     inherited lvFiles: TListView
-      Height = 365
+      Height = 465
       Width = 375
     end
     inherited dlgSelectDir: TSelectDirectoryDialog
@@ -115,7 +115,7 @@ object MainForm: TMainForm
   end
   object PanelSplitter: TSplitter
     Left = 375
-    Height = 434
+    Height = 534
     Top = 66
     Width = 6
     AutoSnap = False
@@ -125,15 +125,15 @@ object MainForm: TMainForm
   end
   inline FilePanel2: TFilePanelFrame
     Left = 381
-    Height = 434
+    Height = 534
     Top = 66
     Width = 375
     Align = alClient
-    ClientHeight = 434
+    ClientHeight = 534
     ClientWidth = 375
     TabOrder = 2
     inherited sbStatus: TStatusBar
-      Top = 411
+      Top = 511
       Width = 375
     end
     inherited pnlDrives: TPanel
@@ -154,7 +154,7 @@ object MainForm: TMainForm
       end
     end
     inherited lvFiles: TListView
-      Height = 365
+      Height = 465
       Width = 375
     end
     inherited dlgSelectDir: TSelectDirectoryDialog

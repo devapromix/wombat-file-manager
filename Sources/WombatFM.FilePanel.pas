@@ -46,8 +46,7 @@ type
     FHistory: TPathHistory;
     FEntries: TFPObjectList;
     FOnActivate: TNotifyEvent;
-    FOptionMaxPathHistory: integer;
-    FOptionShowHidden: boolean;
+    FOptions: TAppOptions;
     FSortColumn: integer;
     FSortDescending: boolean;
     procedure AddToHistory;
@@ -65,7 +64,6 @@ type
     procedure MoveHistory(ADirection: THistoryDirection);
     procedure OpenSelected;
     procedure SelectEntry(const AName: string);
-    procedure SetOptionShowHidden(AValue: boolean);
     procedure UpdateDriveButtons;
     procedure UpdateSortIndicator;
   public
@@ -81,7 +79,6 @@ type
     procedure SetActive(AValue: boolean);
     property CurrentPath: string read FCurrentPath;
     property OnActivate: TNotifyEvent read FOnActivate write FOnActivate;
-    property OptionShowHidden: boolean read FOptionShowHidden write SetOptionShowHidden;
   end;
 
 implementation
@@ -203,7 +200,7 @@ end;
 constructor TFilePanelFrame.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
-  FOptionMaxPathHistory := CDefaultMaxPathHistory;
+  FOptions := GetDefaultOptions;
   FHistory := TPathHistory.Create;
   FEntries := TFPObjectList.Create(True);
   lvFiles.SmallImages := GetIconList;
@@ -267,7 +264,7 @@ end;
 
 procedure TFilePanelFrame.AddToHistory;
 begin
-  AddRecentPath(cbPath.Items, FCurrentPath, FOptionMaxPathHistory);
+  AddRecentPath(cbPath.Items, FCurrentPath, FOptions.OptionMaxPathHistory);
   cbPath.Text := FCurrentPath;
 end;
 
@@ -443,7 +440,7 @@ begin
     repeat
       LIsFolder := (LRec.Attr and faDirectory) <> 0;
       if (LRec.Name <> '.') and (LRec.Name <> CParentName) and
-        (FOptionShowHidden or not GetIsHiddenEntry(LRec.Attr)) then
+        (FOptions.OptionShowHidden or not GetIsHiddenEntry(LRec.Attr)) then
       begin
         InsertEntry(TFileEntry.Create(LRec.Name, LIsFolder, LRec.Size,
           LRec.Time));
@@ -548,18 +545,14 @@ begin
 end;
 
 procedure TFilePanelFrame.ApplyOptions(const AOptions: TAppOptions);
+var
+  LShowHiddenChanged: boolean;
 begin
-  FOptionMaxPathHistory := AOptions.OptionMaxPathHistory;
-  TrimRecentPaths(cbPath.Items, FOptionMaxPathHistory);
-  OptionShowHidden := AOptions.OptionShowHidden;
-end;
-
-procedure TFilePanelFrame.SetOptionShowHidden(AValue: boolean);
-begin
-  if FOptionShowHidden = AValue then
-    Exit;
-  FOptionShowHidden := AValue;
-  Reload;
+  LShowHiddenChanged := FOptions.OptionShowHidden <> AOptions.OptionShowHidden;
+  FOptions := AOptions;
+  TrimRecentPaths(cbPath.Items, FOptions.OptionMaxPathHistory);
+  if LShowHiddenChanged then
+    Reload;
 end;
 
 procedure TFilePanelFrame.ControlActivated(Sender: TObject);

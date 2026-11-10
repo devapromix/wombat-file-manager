@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, ComCtrls, ExtCtrls, Menus, WombatFM.FilePanel,
-  WombatFM.History, WombatFM.Options;
+  WombatFM.Options;
 
 type
   TMainForm = class(TForm)
