@@ -61,6 +61,10 @@
         <IsPartOfProject Value="True"/>
       </Unit>
       <Unit>
+        <Filename Value="WombatFM.Options.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit>
+      <Unit>
         <Filename Value="WombatFM.History.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit>

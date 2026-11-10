@@ -5,21 +5,13 @@ unit WombatFM.History;
 interface
 
 uses
-  Classes, SysUtils;
-
-const
-  CDefaultMaxPathHistory = 20;
+  Classes, SysUtils, WombatFM.Options;
 
 type
   TWindowLayout = record
     Width: Integer;
     Height: Integer;
     LeftPanelWidth: Integer;
-  end;
-
-  TAppOptions = record
-    OptionMaxPathHistory: Integer;
-    OptionShowHidden: Boolean;
   end;
 
   THistoryDirection = (hdBack, hdForward);
@@ -47,7 +39,7 @@ procedure SaveSettings(ALeft, ARight: TStrings; const ALayout: TWindowLayout;
 implementation
 
 uses
-  fpjson, jsonparser, Math, LazFileUtils, LazUTF8{$IFDEF WINDOWS}, Windows{$ENDIF};
+  fpjson, jsonparser, LazFileUtils, LazUTF8{$IFDEF WINDOWS}, Windows{$ENDIF};
 
 const
   CRecentPathsKey = 'recentPaths';
@@ -115,29 +107,17 @@ begin
   end;
 end;
 
-procedure LoadOptions(ASettings: TJSONObject; out AOptions: TAppOptions);
-var
-  LOptions: TJSONObject;
-begin
-  AOptions := Default(TAppOptions);
-  AOptions.OptionMaxPathHistory := CDefaultMaxPathHistory;
-  if ASettings.Find(COptionsKey, LOptions) then
-  begin
-    AOptions.OptionMaxPathHistory :=
-      Max(1, LOptions.Get('maxPathHistory', CDefaultMaxPathHistory));
-    AOptions.OptionShowHidden := LOptions.Get('showHidden', False);
-  end;
-end;
-
 procedure LoadSettings(ALeft, ARight: TStrings; out ALayout: TWindowLayout;
   out AOptions: TAppOptions);
 var
-  LSettings, LLayout: TJSONObject;
+  LSettings, LLayout, LOptions: TJSONObject;
 begin
   ALayout := Default(TWindowLayout);
   LSettings := ReadSettings(SettingsFileName);
   try
-    LoadOptions(LSettings, AOptions);
+    if not LSettings.Find(COptionsKey, LOptions) then
+      LOptions := nil;
+    LoadOptions(LOptions, AOptions);
     LoadPathList(LSettings, CRecentPathsKey, ALeft, AOptions.OptionMaxPathHistory);
     LoadPathList(LSettings, CRightRecentPathsKey, ARight,
       AOptions.OptionMaxPathHistory);
@@ -179,7 +159,7 @@ procedure SaveSettings(ALeft, ARight: TStrings; const ALayout: TWindowLayout;
 var
   LFileName, LTempName: string;
   LId: TGUID;
-  LSettings, LLayout, LOptions: TJSONObject;
+  LSettings, LLayout: TJSONObject;
   LText: UTF8String;
   LHandle: THandle;
   LStream: THandleStream;
@@ -193,9 +173,7 @@ begin
     LLayout.Integers['width'] := ALayout.Width;
     LLayout.Integers['height'] := ALayout.Height;
     LLayout.Integers['leftPanelWidth'] := ALayout.LeftPanelWidth;
-    LOptions := GetSettingsSection(LSettings, COptionsKey);
-    LOptions.Integers['maxPathHistory'] := AOptions.OptionMaxPathHistory;
-    LOptions.Booleans['showHidden'] := AOptions.OptionShowHidden;
+    SaveOptions(GetSettingsSection(LSettings, COptionsKey), AOptions);
     LText := LSettings.FormatJSON + LineEnding;
   finally
     LSettings.Free;

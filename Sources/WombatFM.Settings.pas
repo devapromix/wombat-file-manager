@@ -5,7 +5,7 @@ unit WombatFM.Settings;
 interface
 
 uses
-  Classes, SysUtils, Forms, Controls, StdCtrls, ButtonPanel, WombatFM.History;
+  Classes, SysUtils, Forms, Controls, StdCtrls, ButtonPanel, WombatFM.Options;
 
 type
   TSettingsForm = class(TForm)

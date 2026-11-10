@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils, Contnrs, Math, Graphics, Forms, Controls, StdCtrls,
   ExtCtrls, ComCtrls, Buttons, Dialogs, LCLType, LazUTF8, LazFileUtils,
-  WombatFM.Drives, WombatFM.History, WombatFM.Icons;
+  WombatFM.Drives, WombatFM.History, WombatFM.Icons, WombatFM.Options;
 
 type
   TFileEntry = class
