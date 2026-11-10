@@ -118,7 +118,9 @@ object MainForm: TMainForm
     Height = 434
     Top = 66
     Width = 6
-    MinSize = 150
+    AutoSnap = False
+    MinSize = 1
+    OnCanResize = PanelSplitterCanResize
     OnMoved = PanelSplitterMoved
   end
   inline FilePanel2: TFilePanelFrame
