@@ -30,7 +30,7 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Frame"/>
         <IsVisibleTab Value="True"/>
-        <TopLine Value="559"/>
+        <TopLine Value="560"/>
         <CursorPos X="3" Y="560"/>
         <UsageCount Value="21"/>
         <Loaded Value="True"/>
