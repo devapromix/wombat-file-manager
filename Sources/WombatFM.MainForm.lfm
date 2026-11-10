@@ -1,7 +1,7 @@
 object MainForm: TMainForm
-  Left = 300
+  Left = 923
   Height = 500
-  Top = 200
+  Top = 155
   Width = 756
   Caption = 'Wombat File Manager'
   ClientHeight = 500
@@ -10,6 +10,7 @@ object MainForm: TMainForm
   Position = poScreenCenter
   LCLVersion = '4.8.0.0'
   OnCreate = FormCreate
+  OnResize = FormResize
   object tlbMain: TToolBar
     Left = 0
     Height = 66
@@ -109,10 +110,9 @@ object MainForm: TMainForm
   end
   object PanelSplitter: TSplitter
     Left = 375
+    Height = 434
     Top = 66
     Width = 6
-    Height = 434
-    Align = alLeft
     MinSize = 150
   end
   inline FilePanel2: TFilePanelFrame

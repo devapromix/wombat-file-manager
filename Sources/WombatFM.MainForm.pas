@@ -25,6 +25,7 @@ type
     tlbMain: TToolBar;
     ToolbarImages: TImageList;
     procedure FormCreate(Sender: TObject);
+    procedure FormResize(Sender: TObject);
     procedure miExitClick(Sender: TObject);
     procedure tbBackClick(Sender: TObject);
     procedure tbForwardClick(Sender: TObject);
@@ -44,7 +45,7 @@ var
 implementation
 
 uses
-  Dialogs, WombatFM.History;
+  Dialogs, Math, WombatFM.History;
 
 {$R *.lfm}
 
@@ -69,6 +70,12 @@ begin
   OnClose := @FormClose;
   PanelActivate(FilePanel1);
   ActiveControl := FilePanel1.lvFiles;
+end;
+
+procedure TMainForm.FormResize(Sender: TObject);
+begin
+  if Assigned(FilePanel1) and Assigned(PanelSplitter) then
+    FilePanel1.Width := Max(0, ClientWidth - PanelSplitter.Width) div 2;
 end;
 
 procedure TMainForm.FormClose(Sender: TObject; var CloseAction: TCloseAction);
