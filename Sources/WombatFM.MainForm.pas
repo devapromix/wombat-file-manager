@@ -5,11 +5,13 @@ unit WombatFM.MainForm;
 interface
 
 uses
-  Classes, SysUtils, Forms, Controls, ComCtrls, Menus, WombatFM.FilePanel;
+  Classes, SysUtils, Forms, Controls, ComCtrls, ExtCtrls, Menus, WombatFM.FilePanel;
 
 type
   TMainForm = class(TForm)
     FilePanel1: TFilePanelFrame;
+    PanelSplitter: TSplitter;
+    FilePanel2: TFilePanelFrame;
     MainMenu: TMainMenu;
     miFile: TMenuItem;
     miRefresh: TMenuItem;
@@ -31,6 +33,8 @@ type
     procedure tbRefreshClick(Sender: TObject);
     procedure tbUpClick(Sender: TObject);
   private
+    FActivePanel: TFilePanelFrame;
+    procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure PanelActivate(Sender: TObject);
   end;
 
@@ -39,13 +43,42 @@ var
 
 implementation
 
+uses
+  Dialogs, WombatFM.History;
+
 {$R *.lfm}
 
 procedure TMainForm.FormCreate(Sender: TObject);
+var
+  LLeftPath, LRightPath: string;
 begin
   FilePanel1.OnActivate := @PanelActivate;
+  FilePanel2.OnActivate := @PanelActivate;
   FilePanel1.GoHome;
+  FilePanel2.GoHome;
+  LLeftPath := FilePanel1.cbPath.Text;
+  LRightPath := FilePanel2.cbPath.Text;
+  try
+    LoadRecentPaths(FilePanel1.cbPath.Items, FilePanel2.cbPath.Items);
+  except
+    on E: Exception do
+      ShowMessage('Could not load folder history: ' + E.Message);
+  end;
+  FilePanel1.cbPath.Text := LLeftPath;
+  FilePanel2.cbPath.Text := LRightPath;
+  OnClose := @FormClose;
+  PanelActivate(FilePanel1);
   ActiveControl := FilePanel1.lvFiles;
+end;
+
+procedure TMainForm.FormClose(Sender: TObject; var CloseAction: TCloseAction);
+begin
+  try
+    SaveRecentPaths(FilePanel1.cbPath.Items, FilePanel2.cbPath.Items);
+  except
+    on E: Exception do
+      ShowMessage('Could not save folder history: ' + E.Message);
+  end;
 end;
 
 procedure TMainForm.miExitClick(Sender: TObject);
@@ -55,27 +88,30 @@ end;
 
 procedure TMainForm.PanelActivate(Sender: TObject);
 begin
-  (Sender as TFilePanelFrame).SetActive(True);
+  if Assigned(FActivePanel) then
+    FActivePanel.SetActive(False);
+  FActivePanel := Sender as TFilePanelFrame;
+  FActivePanel.SetActive(True);
 end;
 
 procedure TMainForm.tbBackClick(Sender: TObject);
 begin
-  FilePanel1.GoBack;
+  FActivePanel.GoBack;
 end;
 
 procedure TMainForm.tbForwardClick(Sender: TObject);
 begin
-  FilePanel1.GoForward;
+  FActivePanel.GoForward;
 end;
 
 procedure TMainForm.tbUpClick(Sender: TObject);
 begin
-  FilePanel1.GoUp;
+  FActivePanel.GoUp;
 end;
 
 procedure TMainForm.tbHomeClick(Sender: TObject);
 begin
-  FilePanel1.GoHome;
+  FActivePanel.GoHome;
 end;
 
 procedure TMainForm.tbDownloadsClick(Sender: TObject);
@@ -84,12 +120,12 @@ var
 begin
   LDownloadsPath := IncludeTrailingPathDelimiter(GetUserDir) + 'Downloads';
   if DirectoryExists(LDownloadsPath) then
-    FilePanel1.NavigateTo(LDownloadsPath);
+    FActivePanel.NavigateTo(LDownloadsPath);
 end;
 
 procedure TMainForm.tbRefreshClick(Sender: TObject);
 begin
-  FilePanel1.Reload;
+  FActivePanel.Reload;
 end;
 
 end.

@@ -72,38 +72,85 @@ object MainForm: TMainForm
   inline FilePanel1: TFilePanelFrame
     Height = 434
     Top = 66
-    Width = 756
-    Align = alClient
+    Width = 375
+    Align = alLeft
     ClientHeight = 434
-    ClientWidth = 756
+    ClientWidth = 375
     TabOrder = 1
     inherited sbStatus: TStatusBar
       Top = 411
-      Width = 756
+      Width = 375
     end
     inherited pnlDrives: TPanel
-      Width = 756
-      ClientWidth = 756
+      Width = 375
+      ClientWidth = 375
       inherited btnRoot: TButton
-        Left = 722
+        Left = 341
       end
     end
     inherited pnlPath: TPanel
-      Width = 756
-      ClientWidth = 756
+      Width = 375
+      ClientWidth = 375
       inherited btnBrowse: TButton
-        Left = 722
+        Left = 341
       end
       inherited cbPath: TComboBox
-        Width = 722
+        Width = 341
       end
     end
     inherited lvFiles: TListView
       Height = 365
-      Width = 756
+      Width = 375
     end
     inherited dlgSelectDir: TSelectDirectoryDialog
-      Left = 560
+      Left = 210
+      Top = 158
+    end
+  end
+  object PanelSplitter: TSplitter
+    Left = 375
+    Top = 66
+    Width = 6
+    Height = 434
+    Align = alLeft
+    MinSize = 150
+  end
+  inline FilePanel2: TFilePanelFrame
+    Left = 381
+    Height = 434
+    Top = 66
+    Width = 375
+    Align = alClient
+    ClientHeight = 434
+    ClientWidth = 375
+    TabOrder = 2
+    inherited sbStatus: TStatusBar
+      Top = 411
+      Width = 375
+    end
+    inherited pnlDrives: TPanel
+      Width = 375
+      ClientWidth = 375
+      inherited btnRoot: TButton
+        Left = 341
+      end
+    end
+    inherited pnlPath: TPanel
+      Width = 375
+      ClientWidth = 375
+      inherited btnBrowse: TButton
+        Left = 341
+      end
+      inherited cbPath: TComboBox
+        Width = 341
+      end
+    end
+    inherited lvFiles: TListView
+      Height = 365
+      Width = 375
+    end
+    inherited dlgSelectDir: TSelectDirectoryDialog
+      Left = 210
       Top = 158
     end
   end
