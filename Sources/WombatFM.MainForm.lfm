@@ -6,6 +6,8 @@ object MainForm: TMainForm
   Caption = 'Wombat File Manager'
   ClientHeight = 500
   ClientWidth = 756
+  Constraints.MinHeight = 300
+  Constraints.MinWidth = 500
   KeyPreview = True
   Menu = MainMenu
   Position = poScreenCenter
