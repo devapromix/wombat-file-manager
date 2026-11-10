@@ -8,6 +8,12 @@ uses
   Classes, SysUtils;
 
 type
+  TWindowLayout = record
+    Width: Integer;
+    Height: Integer;
+    LeftPanelWidth: Integer;
+  end;
+
   THistoryDirection = (hdBack, hdForward);
 
   TPathHistory = class
@@ -24,8 +30,8 @@ type
 function GetOppositeDirection(ADirection: THistoryDirection): THistoryDirection;
 procedure AddRecentPath(AList: TStrings; const APath: string);
 
-procedure LoadRecentPaths(ALeft, ARight: TStrings);
-procedure SaveRecentPaths(ALeft, ARight: TStrings);
+procedure LoadSettings(ALeft, ARight: TStrings; out ALayout: TWindowLayout);
+procedure SaveSettings(ALeft, ARight: TStrings; const ALayout: TWindowLayout);
 
 implementation
 
@@ -36,6 +42,7 @@ const
   CMaxPathHistory = 20;
   CRecentPathsKey = 'recentPaths';
   CRightRecentPathsKey = 'rightRecentPaths';
+  CWindowLayoutKey = 'windowLayout';
 
 function SettingsFileName: string;
 begin
@@ -97,14 +104,21 @@ begin
   end;
 end;
 
-procedure LoadRecentPaths(ALeft, ARight: TStrings);
+procedure LoadSettings(ALeft, ARight: TStrings; out ALayout: TWindowLayout);
 var
-  LSettings: TJSONObject;
+  LSettings, LLayout: TJSONObject;
 begin
+  ALayout := Default(TWindowLayout);
   LSettings := ReadSettings(SettingsFileName);
   try
     LoadPathList(LSettings, CRecentPathsKey, ALeft);
     LoadPathList(LSettings, CRightRecentPathsKey, ARight);
+    if LSettings.Find(CWindowLayoutKey, LLayout) then
+    begin
+      ALayout.Width := LLayout.Get('width', 0);
+      ALayout.Height := LLayout.Get('height', 0);
+      ALayout.LeftPanelWidth := LLayout.Get('leftPanelWidth', 0);
+    end;
   finally
     LSettings.Free;
   end;
@@ -122,11 +136,11 @@ begin
     LPaths.Add(AList[LIndex]);
 end;
 
-procedure SaveRecentPaths(ALeft, ARight: TStrings);
+procedure SaveSettings(ALeft, ARight: TStrings; const ALayout: TWindowLayout);
 var
   LFileName, LTempName: string;
   LId: TGUID;
-  LSettings: TJSONObject;
+  LSettings, LLayout: TJSONObject;
   LText: UTF8String;
   LHandle: THandle;
   LStream: THandleStream;
@@ -136,6 +150,15 @@ begin
   try
     SavePathList(LSettings, CRecentPathsKey, ALeft);
     SavePathList(LSettings, CRightRecentPathsKey, ARight);
+    if not LSettings.Find(CWindowLayoutKey, LLayout) then
+    begin
+      LSettings.Delete(CWindowLayoutKey);
+      LLayout := TJSONObject.Create;
+      LSettings.Add(CWindowLayoutKey, LLayout);
+    end;
+    LLayout.Integers['width'] := ALayout.Width;
+    LLayout.Integers['height'] := ALayout.Height;
+    LLayout.Integers['leftPanelWidth'] := ALayout.LeftPanelWidth;
     LText := LSettings.FormatJSON + LineEnding;
   finally
     LSettings.Free;

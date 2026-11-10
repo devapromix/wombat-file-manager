@@ -13,6 +13,7 @@ object MainForm: TMainForm
   OnCreate = FormCreate
   OnKeyDown = FormKeyDown
   OnResize = FormResize
+  OnShow = FormShow
   object tlbMain: TToolBar
     Left = 0
     Height = 66
