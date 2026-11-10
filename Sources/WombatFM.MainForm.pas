@@ -25,6 +25,7 @@ type
     tlbMain: TToolBar;
     ToolbarImages: TImageList;
     procedure FormCreate(Sender: TObject);
+    procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormResize(Sender: TObject);
     procedure miExitClick(Sender: TObject);
     procedure tbBackClick(Sender: TObject);
@@ -45,7 +46,7 @@ var
 implementation
 
 uses
-  Dialogs, Math, WombatFM.History;
+  Dialogs, LCLType, Math, WombatFM.History;
 
 {$R *.lfm}
 
@@ -70,6 +71,18 @@ begin
   OnClose := @FormClose;
   PanelActivate(FilePanel1);
   ActiveControl := FilePanel1.lvFiles;
+end;
+
+procedure TMainForm.FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+begin
+  if (Key <> VK_TAB) or ((Shift - [ssShift]) <> []) then
+    Exit;
+
+  Key := VK_UNKNOWN;
+  if FActivePanel = FilePanel1 then
+    FilePanel2.lvFiles.SetFocus
+  else
+    FilePanel1.lvFiles.SetFocus;
 end;
 
 procedure TMainForm.FormResize(Sender: TObject);

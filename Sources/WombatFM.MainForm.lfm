@@ -6,10 +6,12 @@ object MainForm: TMainForm
   Caption = 'Wombat File Manager'
   ClientHeight = 500
   ClientWidth = 756
+  KeyPreview = True
   Menu = MainMenu
   Position = poScreenCenter
   LCLVersion = '4.8.0.0'
   OnCreate = FormCreate
+  OnKeyDown = FormKeyDown
   OnResize = FormResize
   object tlbMain: TToolBar
     Left = 0
