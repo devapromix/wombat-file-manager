@@ -28,6 +28,7 @@ type
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormResize(Sender: TObject);
     procedure FormShow(Sender: TObject);
+    procedure PanelSplitterMoved(Sender: TObject);
     procedure miExitClick(Sender: TObject);
     procedure tbBackClick(Sender: TObject);
     procedure tbForwardClick(Sender: TObject);
@@ -39,6 +40,8 @@ type
     FActivePanel: TFilePanelFrame;
     FLayoutClientWidth: Integer;
     FPendingLeftPanelWidth: Integer;
+    FLeftPanelRatio: Double;
+    procedure ApplyPanelRatio;
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure PanelActivate(Sender: TObject);
   end;
@@ -58,6 +61,7 @@ var
   LLeftPath, LRightPath: string;
   LLayout: TWindowLayout;
 begin
+  FLeftPanelRatio := 0.5;
   FilePanel1.OnActivate := @PanelActivate;
   FilePanel2.OnActivate := @PanelActivate;
   FilePanel1.GoHome;
@@ -99,23 +103,41 @@ begin
     (ClientWidth <> FLayoutClientWidth) then
   begin
     FLayoutClientWidth := ClientWidth;
-    FilePanel1.Width := Max(0, ClientWidth - PanelSplitter.Width) div 2;
+    if FLeftPanelRatio > 0 then
+      ApplyPanelRatio;
   end;
+end;
+
+procedure TMainForm.ApplyPanelRatio;
+var
+  LAvailableWidth, LMinPanelWidth: Integer;
+begin
+  LAvailableWidth := Max(0, ClientWidth - PanelSplitter.Width);
+  LMinPanelWidth := Min(PanelSplitter.MinSize, LAvailableWidth div 2);
+  FilePanel1.Width := EnsureRange(Integer(Round(LAvailableWidth * FLeftPanelRatio)),
+    LMinPanelWidth, LAvailableWidth - LMinPanelWidth);
 end;
 
 procedure TMainForm.FormShow(Sender: TObject);
 var
-  LAvailableWidth, LMinPanelWidth, LSavedWidth: Integer;
+  LAvailableWidth: Integer;
 begin
-  if FPendingLeftPanelWidth <= 0 then
-    Exit;
-  LSavedWidth := FPendingLeftPanelWidth;
+  LAvailableWidth := ClientWidth - PanelSplitter.Width;
+  if (FPendingLeftPanelWidth > 0) and (LAvailableWidth > 0) then
+    FLeftPanelRatio := Min(FPendingLeftPanelWidth, LAvailableWidth) / LAvailableWidth;
   FPendingLeftPanelWidth := 0;
+  OnShow := nil;
   FLayoutClientWidth := ClientWidth;
-  LAvailableWidth := Max(0, ClientWidth - PanelSplitter.Width);
-  LMinPanelWidth := Min(PanelSplitter.MinSize, LAvailableWidth div 2);
-  FilePanel1.Width := EnsureRange(LSavedWidth, LMinPanelWidth,
-    LAvailableWidth - LMinPanelWidth);
+  ApplyPanelRatio;
+end;
+
+procedure TMainForm.PanelSplitterMoved(Sender: TObject);
+var
+  LAvailableWidth: Integer;
+begin
+  LAvailableWidth := ClientWidth - PanelSplitter.Width;
+  if (LAvailableWidth > 0) and (FilePanel1.Width > 0) then
+    FLeftPanelRatio := Min(FilePanel1.Width, LAvailableWidth) / LAvailableWidth;
 end;
 
 procedure TMainForm.FormClose(Sender: TObject; var CloseAction: TCloseAction);

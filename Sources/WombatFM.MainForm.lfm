@@ -117,6 +117,7 @@ object MainForm: TMainForm
     Top = 66
     Width = 6
     MinSize = 150
+    OnMoved = PanelSplitterMoved
   end
   inline FilePanel2: TFilePanelFrame
     Left = 381
