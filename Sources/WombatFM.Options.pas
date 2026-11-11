@@ -149,7 +149,7 @@ begin
     begin
       ALayout.Width := LLayout.Get('width', 0);
       ALayout.Height := LLayout.Get('height', 0);
-      ALayout.LeftPanelWidth := LLayout.Get('leftPanelWidth', 0);
+      ALayout.LeftPanelWidth := LLayout.Get('topLeftPanelWidth', 0);
       ALayout.BottomLeftPanelWidth := LLayout.Get('bottomLeftPanelWidth', 0);
       ALayout.TopPanelHeight := LLayout.Get('topPanelHeight', 0);
     end;
@@ -210,7 +210,7 @@ begin
     LLayout := GetSettingsSection(LSettings, CWindowLayoutKey);
     LLayout.Integers['width'] := ALayout.Width;
     LLayout.Integers['height'] := ALayout.Height;
-    LLayout.Integers['leftPanelWidth'] := ALayout.LeftPanelWidth;
+    LLayout.Integers['topLeftPanelWidth'] := ALayout.LeftPanelWidth;
     LLayout.Integers['bottomLeftPanelWidth'] := ALayout.BottomLeftPanelWidth;
     LLayout.Integers['topPanelHeight'] := ALayout.TopPanelHeight;
     SaveOptions(LSettings, AOptions);
