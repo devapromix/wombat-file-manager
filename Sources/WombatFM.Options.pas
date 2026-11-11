@@ -41,8 +41,8 @@ uses
 
 const
   CDefaultMaxPathHistory = 20;
-  CRecentPathsKeys: array[0..CPanelCount - 1] of string = ('recentPaths',
-    'rightRecentPaths', 'bottomLeftRecentPaths', 'bottomRightRecentPaths');
+  CRecentPathsKeys: array[0..CPanelCount - 1] of string = ('topLeftRecentPaths',
+    'topRightRecentPaths', 'bottomLeftRecentPaths', 'bottomRightRecentPaths');
   CFolderNamesKey = 'folderNameHistory';
   CWindowLayoutKey = 'windowLayout';
   COptionsKey = 'options';
