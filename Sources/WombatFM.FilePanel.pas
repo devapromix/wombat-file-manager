@@ -22,8 +22,12 @@ type
       ASize: int64; AAge: longint);
   end;
 
+  { TFilePanelFrame }
+
   TFilePanelFrame = class(TFrame)
     btnBrowse: TButton;
+    btnBrowse1: TButton;
+    btnRoot: TButton;
     cbPath: TComboBox;
     dlgSelectDir: TSelectDirectoryDialog;
     lvFiles: TListView;
@@ -32,6 +36,7 @@ type
     sbStatus: TStatusBar;
     procedure btnBrowseClick(Sender: TObject);
     procedure btnRootClick(Sender: TObject);
+    procedure cbPathChange(Sender: TObject);
     procedure cbPathKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
     procedure cbPathSelect(Sender: TObject);
     procedure ControlActivated(Sender: TObject);
@@ -596,6 +601,11 @@ end;
 procedure TFilePanelFrame.btnRootClick(Sender: TObject);
 begin
   NavigateTo(ExtractFileDrive(FCurrentPath) + PathDelim);
+end;
+
+procedure TFilePanelFrame.cbPathChange(Sender: TObject);
+begin
+
 end;
 
 procedure TFilePanelFrame.cbPathKeyDown(Sender: TObject; var Key: word;

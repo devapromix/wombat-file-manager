@@ -28,10 +28,10 @@ object FilePanelFrame: TFilePanelFrame
     TabOrder = 1
     OnClick = pnlDrivesClick
     object btnRoot: TButton
-      Left = 713
+      Left = 745
       Height = 23
       Top = 0
-      Width = 55
+      Width = 23
       Align = alRight
       Caption = '\'
       TabOrder = 0
@@ -50,27 +50,37 @@ object FilePanelFrame: TFilePanelFrame
     ClientWidth = 768
     TabOrder = 2
     object btnBrowse: TButton
-      Left = 713
+      Left = 722
       Height = 23
       Top = 0
-      Width = 55
+      Width = 23
       Align = alRight
-      Caption = '...'
+      Caption = '*'
       TabOrder = 0
-      OnClick = btnBrowseClick
-      OnEnter = ControlActivated
     end
     object cbPath: TComboBox
       Left = 0
       Height = 23
       Top = 0
-      Width = 713
+      Width = 722
       Align = alClient
       ItemHeight = 15
       TabOrder = 1
+      OnChange = cbPathChange
       OnEnter = ControlActivated
       OnKeyDown = cbPathKeyDown
       OnSelect = cbPathSelect
+    end
+    object btnBrowse1: TButton
+      Left = 745
+      Height = 23
+      Top = 0
+      Width = 23
+      Align = alRight
+      Caption = '...'
+      TabOrder = 2
+      OnClick = btnBrowseClick
+      OnEnter = ControlActivated
     end
   end
   object lvFiles: TListView

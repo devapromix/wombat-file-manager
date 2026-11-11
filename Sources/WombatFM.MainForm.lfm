@@ -91,7 +91,7 @@ object MainForm: TMainForm
     ClientHeight = 214
     ClientWidth = 756
     TabOrder = 1
-    inline FilePanel1: TFilePanelFrame
+    inline FilePanelTopLeft: TFilePanelFrame
       Height = 214
       Width = 375
       Align = alLeft
@@ -127,7 +127,7 @@ object MainForm: TMainForm
         Top = 158
       end
     end
-    object PanelSplitter: TSplitter
+    object TopSplitter: TSplitter
       Left = 375
       Height = 214
       Top = 0
@@ -137,7 +137,7 @@ object MainForm: TMainForm
       OnCanResize = PanelSplitterCanResize
       OnMoved = PanelSplitterMoved
     end
-    inline FilePanel2: TFilePanelFrame
+    inline FilePanelTopRight: TFilePanelFrame
       Left = 381
       Height = 214
       Width = 375
@@ -199,7 +199,7 @@ object MainForm: TMainForm
     ClientHeight = 214
     ClientWidth = 756
     TabOrder = 3
-    inline FilePanel3: TFilePanelFrame
+    inline FilePanelBottomLeft: TFilePanelFrame
       Height = 214
       Width = 375
       Align = alLeft
@@ -245,7 +245,7 @@ object MainForm: TMainForm
       OnCanResize = PanelSplitterCanResize
       OnMoved = PanelSplitterMoved
     end
-    inline FilePanel4: TFilePanelFrame
+    inline FilePanelBottomRight: TFilePanelFrame
       Left = 381
       Height = 214
       Width = 375
