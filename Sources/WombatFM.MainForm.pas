@@ -8,6 +8,9 @@ uses
   Classes, SysUtils, Forms, Controls, ComCtrls, ExtCtrls, Menus, WombatFM.FilePanel,
   WombatFM.Options;
 
+const
+  CRowCount = 2;
+
 type
   TMainForm = class(TForm)
     BottomSplitter: TSplitter;
@@ -56,9 +59,9 @@ type
     FLayoutClientHeight: Integer;
     FLayoutClientWidth: Integer;
     FPanels: array[0..CPanelCount - 1] of TFilePanelFrame;
-    FPendingLeftPanelWidth: Integer;
+    FPendingLeftPanelWidths: array[0..CRowCount - 1] of Integer;
     FPendingTopPanelHeight: Integer;
-    FLeftPanelRatio: Double;
+    FLeftPanelRatios: array[0..CRowCount - 1] of Double;
     FTopPanelRatio: Double;
     FOptions: TAppOptions;
     procedure ApplyOptions;
@@ -67,9 +70,12 @@ type
     function GetBodyHeight: Integer;
     function GetClampedLeftWidth(AWidth: Integer): Integer;
     function GetClampedTopHeight(AHeight: Integer): Integer;
+    function GetLeftPanel(ARow: Integer): TFilePanelFrame;
     function GetPanelIndex(APanel: TFilePanelFrame): Integer;
     function GetPathLists: TPathLists;
+    function GetRowIndex(ASplitter: TSplitter): Integer;
     procedure PanelActivate(Sender: TObject);
+    procedure SyncLeftPanelRatios(ASourceRow: Integer);
   end;
 
 var
@@ -81,9 +87,6 @@ uses
   Dialogs, LCLType, Math, WombatFM.Settings;
 
 {$R *.lfm}
-
-const
-  CMinPanelHeight = 120;
 
 function GetAvailableSize(ATotal, ASplitterSize: Integer): Integer;
 begin
@@ -117,7 +120,8 @@ var
   LIndex: Integer;
   LLayout: TWindowLayout;
 begin
-  FLeftPanelRatio := 0.5;
+  for LIndex := 0 to CRowCount - 1 do
+    FLeftPanelRatios[LIndex] := 0.5;
   FTopPanelRatio := 0.5;
   FPanels[0] := FilePanel1;
   FPanels[1] := FilePanel2;
@@ -135,7 +139,9 @@ begin
     if (LLayout.Width > 0) and (LLayout.Height > 0) then
       SetBounds(Left, Top, Min(LLayout.Width, Screen.WorkAreaWidth),
         Min(LLayout.Height, Screen.WorkAreaHeight));
-    FPendingLeftPanelWidth := LLayout.LeftPanelWidth;
+    FPendingLeftPanelWidths[0] := LLayout.LeftPanelWidth;
+    FPendingLeftPanelWidths[1] := IfThen(LLayout.BottomLeftPanelWidth > 0,
+      LLayout.BottomLeftPanelWidth, LLayout.LeftPanelWidth);
     FPendingTopPanelHeight := LLayout.TopPanelHeight;
   except
     on E: Exception do
@@ -168,7 +174,7 @@ begin
   begin
     FLayoutClientWidth := ClientWidth;
     FLayoutClientHeight := ClientHeight;
-    if (FLeftPanelRatio > 0) and (FTopPanelRatio > 0) then
+    if FTopPanelRatio > 0 then
       ApplyPanelRatios;
   end;
 end;
@@ -187,19 +193,37 @@ end;
 function TMainForm.GetClampedTopHeight(AHeight: Integer): Integer;
 begin
   Result := GetClampedSize(AHeight, GetBodyHeight, RowSplitter.Height,
-    CMinPanelHeight);
+    Ceil(ClientHeight / 10));
 end;
 
 procedure TMainForm.ApplyPanelRatios;
 var
-  LLeftWidth: Integer;
+  LRow: Integer;
 begin
-  LLeftWidth := GetClampedLeftWidth(Round(
-    GetAvailableSize(ClientWidth, PanelSplitter.Width) * FLeftPanelRatio));
-  FilePanel1.Width := LLeftWidth;
-  FilePanel3.Width := LLeftWidth;
+  for LRow := 0 to CRowCount - 1 do
+    GetLeftPanel(LRow).Width := GetClampedLeftWidth(Round(
+      GetAvailableSize(ClientWidth, PanelSplitter.Width) * FLeftPanelRatios[LRow]));
   pnlTop.Height := GetClampedTopHeight(Round(
     GetAvailableSize(GetBodyHeight, RowSplitter.Height) * FTopPanelRatio));
+end;
+
+function TMainForm.GetLeftPanel(ARow: Integer): TFilePanelFrame;
+begin
+  Result := FPanels[ARow * (CPanelCount div CRowCount)];
+end;
+
+function TMainForm.GetRowIndex(ASplitter: TSplitter): Integer;
+begin
+  Result := Ord(ASplitter = BottomSplitter);
+end;
+
+procedure TMainForm.SyncLeftPanelRatios(ASourceRow: Integer);
+var
+  LRow: Integer;
+begin
+  if FOptions.OptionSyncSplitters then
+    for LRow := 0 to CRowCount - 1 do
+      FLeftPanelRatios[LRow] := FLeftPanelRatios[ASourceRow];
 end;
 
 procedure TMainForm.PanelSplitterCanResize(Sender: TObject; var NewSize: Integer;
@@ -215,13 +239,19 @@ begin
 end;
 
 procedure TMainForm.FormShow(Sender: TObject);
+var
+  LRow: Integer;
 begin
-  FLeftPanelRatio := GetSplitRatio(FPendingLeftPanelWidth, ClientWidth,
-    PanelSplitter.Width, FLeftPanelRatio);
+  for LRow := 0 to CRowCount - 1 do
+  begin
+    FLeftPanelRatios[LRow] := GetSplitRatio(FPendingLeftPanelWidths[LRow],
+      ClientWidth, PanelSplitter.Width, FLeftPanelRatios[LRow]);
+    FPendingLeftPanelWidths[LRow] := 0;
+  end;
   FTopPanelRatio := GetSplitRatio(FPendingTopPanelHeight, GetBodyHeight,
     RowSplitter.Height, FTopPanelRatio);
-  FPendingLeftPanelWidth := 0;
   FPendingTopPanelHeight := 0;
+  SyncLeftPanelRatios(0);
   OnShow := nil;
   FLayoutClientWidth := ClientWidth;
   FLayoutClientHeight := ClientHeight;
@@ -230,13 +260,13 @@ end;
 
 procedure TMainForm.PanelSplitterMoved(Sender: TObject);
 var
-  LLeftWidth: Integer;
+  LRow: Integer;
 begin
-  LLeftWidth := (Sender as TSplitter).Left;
-  FLeftPanelRatio := GetSplitRatio(LLeftWidth, ClientWidth, PanelSplitter.Width,
-    FLeftPanelRatio);
-  FilePanel1.Width := LLeftWidth;
-  FilePanel3.Width := LLeftWidth;
+  LRow := GetRowIndex(Sender as TSplitter);
+  FLeftPanelRatios[LRow] := GetSplitRatio((Sender as TSplitter).Left, ClientWidth,
+    PanelSplitter.Width, FLeftPanelRatios[LRow]);
+  SyncLeftPanelRatios(LRow);
+  ApplyPanelRatios;
 end;
 
 procedure TMainForm.RowSplitterMoved(Sender: TObject);
@@ -251,7 +281,8 @@ var
 begin
   LLayout.Width := Width;
   LLayout.Height := Height;
-  LLayout.LeftPanelWidth := FilePanel1.Width;
+  LLayout.LeftPanelWidth := GetLeftPanel(0).Width;
+  LLayout.BottomLeftPanelWidth := GetLeftPanel(1).Width;
   LLayout.TopPanelHeight := pnlTop.Height;
   try
     SaveSettings(GetPathLists, LLayout, FOptions);
@@ -290,6 +321,8 @@ var
 begin
   for LIndex := 0 to CPanelCount - 1 do
     FPanels[LIndex].ApplyOptions(FOptions);
+  SyncLeftPanelRatios(0);
+  ApplyPanelRatios;
 end;
 
 procedure TMainForm.miSettingsClick(Sender: TObject);

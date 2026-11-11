@@ -17,12 +17,14 @@ type
     Width: Integer;
     Height: Integer;
     LeftPanelWidth: Integer;
+    BottomLeftPanelWidth: Integer;
     TopPanelHeight: Integer;
   end;
 
   TAppOptions = record
     OptionMaxPathHistory: Integer;
     OptionShowHidden: Boolean;
+    OptionSyncSplitters: Boolean;
   end;
 
 function GetDefaultOptions: TAppOptions;
@@ -48,6 +50,7 @@ function GetDefaultOptions: TAppOptions;
 begin
   Result := Default(TAppOptions);
   Result.OptionMaxPathHistory := CDefaultMaxPathHistory;
+  Result.OptionSyncSplitters := True;
 end;
 
 function SettingsFileName: string;
@@ -118,8 +121,11 @@ begin
   if ASettings.Find(COptionsKey, LOptions) then
   begin
     AOptions.OptionMaxPathHistory :=
-      Max(1, LOptions.Get('maxPathHistory', CDefaultMaxPathHistory));
-    AOptions.OptionShowHidden := LOptions.Get('showHidden', False);
+      Max(1, LOptions.Get('maxPathHistory', AOptions.OptionMaxPathHistory));
+    AOptions.OptionShowHidden :=
+      LOptions.Get('showHidden', AOptions.OptionShowHidden);
+    AOptions.OptionSyncSplitters :=
+      LOptions.Get('syncSplitters', AOptions.OptionSyncSplitters);
   end;
 end;
 
@@ -141,6 +147,7 @@ begin
       ALayout.Width := LLayout.Get('width', 0);
       ALayout.Height := LLayout.Get('height', 0);
       ALayout.LeftPanelWidth := LLayout.Get('leftPanelWidth', 0);
+      ALayout.BottomLeftPanelWidth := LLayout.Get('bottomLeftPanelWidth', 0);
       ALayout.TopPanelHeight := LLayout.Get('topPanelHeight', 0);
     end;
   finally
@@ -177,6 +184,7 @@ begin
   LOptions := GetSettingsSection(ASettings, COptionsKey);
   LOptions.Integers['maxPathHistory'] := AOptions.OptionMaxPathHistory;
   LOptions.Booleans['showHidden'] := AOptions.OptionShowHidden;
+  LOptions.Booleans['syncSplitters'] := AOptions.OptionSyncSplitters;
 end;
 
 procedure SaveSettings(const APaths: TPathLists; const ALayout: TWindowLayout;
@@ -199,6 +207,7 @@ begin
     LLayout.Integers['width'] := ALayout.Width;
     LLayout.Integers['height'] := ALayout.Height;
     LLayout.Integers['leftPanelWidth'] := ALayout.LeftPanelWidth;
+    LLayout.Integers['bottomLeftPanelWidth'] := ALayout.BottomLeftPanelWidth;
     LLayout.Integers['topPanelHeight'] := ALayout.TopPanelHeight;
     SaveOptions(LSettings, AOptions);
     LText := LSettings.FormatJSON + LineEnding;
