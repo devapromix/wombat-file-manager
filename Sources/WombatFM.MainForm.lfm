@@ -4,10 +4,10 @@ object MainForm: TMainForm
   Top = 155
   Width = 756
   Caption = 'Wombat File Manager'
-  ClientHeight = 600
+  ClientHeight = 500
   ClientWidth = 756
-  Constraints.MinHeight = 600
-  Constraints.MinWidth = 600
+  Constraints.MinHeight = 420
+  Constraints.MinWidth = 500
   KeyPreview = True
   Menu = MainMenu
   Position = poScreenCenter
@@ -75,91 +75,207 @@ object MainForm: TMainForm
       OnClick = tbRefreshClick
     end
   end
-  inline FilePanel1: TFilePanelFrame
-    Height = 534
+  object pnlTop: TPanel
+    Left = 0
+    Height = 214
     Top = 66
-    Width = 375
-    Align = alLeft
-    ClientHeight = 534
-    ClientWidth = 375
+    Width = 756
+    Align = alTop
+    BevelOuter = bvNone
+    ClientHeight = 214
+    ClientWidth = 756
     TabOrder = 1
-    inherited sbStatus: TStatusBar
-      Top = 511
+    inline FilePanel1: TFilePanelFrame
+      Height = 214
       Width = 375
-    end
-    inherited pnlDrives: TPanel
-      Width = 375
+      Align = alLeft
+      ClientHeight = 214
       ClientWidth = 375
-      inherited btnRoot: TButton
-        Left = 341
+      TabOrder = 0
+      inherited sbStatus: TStatusBar
+        Top = 191
+        Width = 375
+      end
+      inherited pnlDrives: TPanel
+        Width = 375
+        ClientWidth = 375
+        inherited btnRoot: TButton
+          Left = 341
+        end
+      end
+      inherited pnlPath: TPanel
+        Width = 375
+        ClientWidth = 375
+        inherited btnBrowse: TButton
+          Left = 341
+        end
+        inherited cbPath: TComboBox
+          Width = 341
+        end
+      end
+      inherited lvFiles: TListView
+        Height = 145
+        Width = 375
+      end
+      inherited dlgSelectDir: TSelectDirectoryDialog
+        Left = 210
+        Top = 158
       end
     end
-    inherited pnlPath: TPanel
+    object PanelSplitter: TSplitter
+      Left = 375
+      Height = 214
+      Width = 6
+      AutoSnap = False
+      MinSize = 1
+      OnCanResize = PanelSplitterCanResize
+      OnMoved = PanelSplitterMoved
+    end
+    inline FilePanel2: TFilePanelFrame
+      Left = 381
+      Height = 214
       Width = 375
+      Align = alClient
+      ClientHeight = 214
       ClientWidth = 375
-      inherited btnBrowse: TButton
-        Left = 341
+      TabOrder = 1
+      inherited sbStatus: TStatusBar
+        Top = 191
+        Width = 375
       end
-      inherited cbPath: TComboBox
-        Width = 341
+      inherited pnlDrives: TPanel
+        Width = 375
+        ClientWidth = 375
+        inherited btnRoot: TButton
+          Left = 341
+        end
       end
-    end
-    inherited lvFiles: TListView
-      Height = 465
-      Width = 375
-    end
-    inherited dlgSelectDir: TSelectDirectoryDialog
-      Left = 210
-      Top = 158
+      inherited pnlPath: TPanel
+        Width = 375
+        ClientWidth = 375
+        inherited btnBrowse: TButton
+          Left = 341
+        end
+        inherited cbPath: TComboBox
+          Width = 341
+        end
+      end
+      inherited lvFiles: TListView
+        Height = 145
+        Width = 375
+      end
+      inherited dlgSelectDir: TSelectDirectoryDialog
+        Left = 210
+        Top = 158
+      end
     end
   end
-  object PanelSplitter: TSplitter
-    Left = 375
-    Height = 534
-    Top = 66
-    Width = 6
+  object RowSplitter: TSplitter
+    Cursor = crVSplit
+    Left = 0
+    Height = 6
+    Top = 280
+    Width = 756
+    Align = alTop
     AutoSnap = False
     MinSize = 1
-    OnCanResize = PanelSplitterCanResize
-    OnMoved = PanelSplitterMoved
+    ResizeAnchor = akTop
+    OnCanResize = RowSplitterCanResize
+    OnMoved = RowSplitterMoved
   end
-  inline FilePanel2: TFilePanelFrame
-    Left = 381
-    Height = 534
-    Top = 66
-    Width = 375
+  object pnlBottom: TPanel
+    Left = 0
+    Height = 214
+    Top = 286
+    Width = 756
     Align = alClient
-    ClientHeight = 534
-    ClientWidth = 375
-    TabOrder = 2
-    inherited sbStatus: TStatusBar
-      Top = 511
+    BevelOuter = bvNone
+    ClientHeight = 214
+    ClientWidth = 756
+    TabOrder = 3
+    inline FilePanel3: TFilePanelFrame
+      Height = 214
       Width = 375
-    end
-    inherited pnlDrives: TPanel
-      Width = 375
+      Align = alLeft
+      ClientHeight = 214
       ClientWidth = 375
-      inherited btnRoot: TButton
-        Left = 341
+      TabOrder = 0
+      inherited sbStatus: TStatusBar
+        Top = 191
+        Width = 375
+      end
+      inherited pnlDrives: TPanel
+        Width = 375
+        ClientWidth = 375
+        inherited btnRoot: TButton
+          Left = 341
+        end
+      end
+      inherited pnlPath: TPanel
+        Width = 375
+        ClientWidth = 375
+        inherited btnBrowse: TButton
+          Left = 341
+        end
+        inherited cbPath: TComboBox
+          Width = 341
+        end
+      end
+      inherited lvFiles: TListView
+        Height = 145
+        Width = 375
+      end
+      inherited dlgSelectDir: TSelectDirectoryDialog
+        Left = 210
+        Top = 158
       end
     end
-    inherited pnlPath: TPanel
+    object BottomSplitter: TSplitter
+      Left = 375
+      Height = 214
+      Width = 6
+      AutoSnap = False
+      MinSize = 1
+      OnCanResize = PanelSplitterCanResize
+      OnMoved = PanelSplitterMoved
+    end
+    inline FilePanel4: TFilePanelFrame
+      Left = 381
+      Height = 214
       Width = 375
+      Align = alClient
+      ClientHeight = 214
       ClientWidth = 375
-      inherited btnBrowse: TButton
-        Left = 341
+      TabOrder = 1
+      inherited sbStatus: TStatusBar
+        Top = 191
+        Width = 375
       end
-      inherited cbPath: TComboBox
-        Width = 341
+      inherited pnlDrives: TPanel
+        Width = 375
+        ClientWidth = 375
+        inherited btnRoot: TButton
+          Left = 341
+        end
       end
-    end
-    inherited lvFiles: TListView
-      Height = 465
-      Width = 375
-    end
-    inherited dlgSelectDir: TSelectDirectoryDialog
-      Left = 210
-      Top = 158
+      inherited pnlPath: TPanel
+        Width = 375
+        ClientWidth = 375
+        inherited btnBrowse: TButton
+          Left = 341
+        end
+        inherited cbPath: TComboBox
+          Width = 341
+        end
+      end
+      inherited lvFiles: TListView
+        Height = 145
+        Width = 375
+      end
+      inherited dlgSelectDir: TSelectDirectoryDialog
+        Left = 210
+        Top = 158
+      end
     end
   end
   object ToolbarImages: TImageList

@@ -7,11 +7,17 @@ interface
 uses
   Classes, SysUtils;
 
+const
+  CPanelCount = 4;
+
 type
+  TPathLists = array[0..CPanelCount - 1] of TStrings;
+
   TWindowLayout = record
     Width: Integer;
     Height: Integer;
     LeftPanelWidth: Integer;
+    TopPanelHeight: Integer;
   end;
 
   TAppOptions = record
@@ -20,9 +26,9 @@ type
   end;
 
 function GetDefaultOptions: TAppOptions;
-procedure LoadSettings(ALeft, ARight: TStrings; out ALayout: TWindowLayout;
+procedure LoadSettings(const APaths: TPathLists; out ALayout: TWindowLayout;
   out AOptions: TAppOptions);
-procedure SaveSettings(ALeft, ARight: TStrings; const ALayout: TWindowLayout;
+procedure SaveSettings(const APaths: TPathLists; const ALayout: TWindowLayout;
   const AOptions: TAppOptions);
 
 implementation
@@ -33,8 +39,8 @@ uses
 
 const
   CDefaultMaxPathHistory = 20;
-  CRecentPathsKey = 'recentPaths';
-  CRightRecentPathsKey = 'rightRecentPaths';
+  CRecentPathsKeys: array[0..CPanelCount - 1] of string = ('recentPaths',
+    'rightRecentPaths', 'bottomLeftRecentPaths', 'bottomRightRecentPaths');
   CWindowLayoutKey = 'windowLayout';
   COptionsKey = 'options';
 
@@ -117,23 +123,25 @@ begin
   end;
 end;
 
-procedure LoadSettings(ALeft, ARight: TStrings; out ALayout: TWindowLayout;
+procedure LoadSettings(const APaths: TPathLists; out ALayout: TWindowLayout;
   out AOptions: TAppOptions);
 var
   LSettings, LLayout: TJSONObject;
+  LIndex: Integer;
 begin
   ALayout := Default(TWindowLayout);
   LSettings := ReadSettings(SettingsFileName);
   try
     LoadOptions(LSettings, AOptions);
-    LoadPathList(LSettings, CRecentPathsKey, ALeft, AOptions.OptionMaxPathHistory);
-    LoadPathList(LSettings, CRightRecentPathsKey, ARight,
-      AOptions.OptionMaxPathHistory);
+    for LIndex := 0 to CPanelCount - 1 do
+      LoadPathList(LSettings, CRecentPathsKeys[LIndex], APaths[LIndex],
+        AOptions.OptionMaxPathHistory);
     if LSettings.Find(CWindowLayoutKey, LLayout) then
     begin
       ALayout.Width := LLayout.Get('width', 0);
       ALayout.Height := LLayout.Get('height', 0);
       ALayout.LeftPanelWidth := LLayout.Get('leftPanelWidth', 0);
+      ALayout.TopPanelHeight := LLayout.Get('topPanelHeight', 0);
     end;
   finally
     LSettings.Free;
@@ -171,10 +179,11 @@ begin
   LOptions.Booleans['showHidden'] := AOptions.OptionShowHidden;
 end;
 
-procedure SaveSettings(ALeft, ARight: TStrings; const ALayout: TWindowLayout;
+procedure SaveSettings(const APaths: TPathLists; const ALayout: TWindowLayout;
   const AOptions: TAppOptions);
 var
   LFileName, LTempName: string;
+  LIndex: Integer;
   LId: TGUID;
   LSettings, LLayout: TJSONObject;
   LText: UTF8String;
@@ -184,12 +193,13 @@ begin
   LFileName := SettingsFileName;
   LSettings := ReadSettings(LFileName);
   try
-    SavePathList(LSettings, CRecentPathsKey, ALeft);
-    SavePathList(LSettings, CRightRecentPathsKey, ARight);
+    for LIndex := 0 to CPanelCount - 1 do
+      SavePathList(LSettings, CRecentPathsKeys[LIndex], APaths[LIndex]);
     LLayout := GetSettingsSection(LSettings, CWindowLayoutKey);
     LLayout.Integers['width'] := ALayout.Width;
     LLayout.Integers['height'] := ALayout.Height;
     LLayout.Integers['leftPanelWidth'] := ALayout.LeftPanelWidth;
+    LLayout.Integers['topPanelHeight'] := ALayout.TopPanelHeight;
     SaveOptions(LSettings, AOptions);
     LText := LSettings.FormatJSON + LineEnding;
   finally
