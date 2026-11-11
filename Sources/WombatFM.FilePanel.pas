@@ -71,6 +71,7 @@ type
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
     procedure ApplyOptions(const AOptions: TAppOptions);
+    procedure CreateFolder(const AName: string; out ACreated: Boolean);
     procedure GoBack;
     procedure GoForward;
     procedure GoHome;
@@ -527,6 +528,24 @@ procedure TFilePanelFrame.Reload;
 begin
   if (FCurrentPath <> '') and GetIsFolderAvailable(FCurrentPath) then
     LoadDirectory(FCurrentPath);
+end;
+
+procedure TFilePanelFrame.CreateFolder(const AName: string; out ACreated: Boolean);
+var
+  LPath: string;
+begin
+  ACreated := False;
+  if AName = '' then
+    Exit;
+  LPath := FCurrentPath + AName;
+  ACreated := CreateDirUTF8(LPath);
+  if not ACreated then
+  begin
+    ShowMessage('Cannot create folder: ' + LPath);
+    Exit;
+  end;
+  Reload;
+  SelectEntry(AName);
 end;
 
 procedure TFilePanelFrame.SetActive(AValue: boolean);

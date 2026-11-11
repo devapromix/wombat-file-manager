@@ -74,6 +74,12 @@ object MainForm: TMainForm
       ImageIndex = 4
       OnClick = tbRefreshClick
     end
+    object tbNewFolder: TToolButton
+      Left = 433
+      Top = 2
+      Caption = 'New Folder'
+      OnClick = tbNewFolderClick
+    end
   end
   object pnlTop: TPanel
     Left = 0

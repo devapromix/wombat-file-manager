@@ -28,10 +28,10 @@ type
   end;
 
 function GetDefaultOptions: TAppOptions;
-procedure LoadSettings(const APaths: TPathLists; out ALayout: TWindowLayout;
-  out AOptions: TAppOptions);
-procedure SaveSettings(const APaths: TPathLists; const ALayout: TWindowLayout;
-  const AOptions: TAppOptions);
+procedure LoadSettings(const APaths: TPathLists; AFolderNames: TStrings;
+  out ALayout: TWindowLayout; out AOptions: TAppOptions);
+procedure SaveSettings(const APaths: TPathLists; AFolderNames: TStrings;
+  const ALayout: TWindowLayout; const AOptions: TAppOptions);
 
 implementation
 
@@ -43,6 +43,7 @@ const
   CDefaultMaxPathHistory = 20;
   CRecentPathsKeys: array[0..CPanelCount - 1] of string = ('recentPaths',
     'rightRecentPaths', 'bottomLeftRecentPaths', 'bottomRightRecentPaths');
+  CFolderNamesKey = 'folderNameHistory';
   CWindowLayoutKey = 'windowLayout';
   COptionsKey = 'options';
 
@@ -129,8 +130,8 @@ begin
   end;
 end;
 
-procedure LoadSettings(const APaths: TPathLists; out ALayout: TWindowLayout;
-  out AOptions: TAppOptions);
+procedure LoadSettings(const APaths: TPathLists; AFolderNames: TStrings;
+  out ALayout: TWindowLayout; out AOptions: TAppOptions);
 var
   LSettings, LLayout: TJSONObject;
   LIndex: Integer;
@@ -142,6 +143,8 @@ begin
     for LIndex := 0 to CPanelCount - 1 do
       LoadPathList(LSettings, CRecentPathsKeys[LIndex], APaths[LIndex],
         AOptions.OptionMaxPathHistory);
+    LoadPathList(LSettings, CFolderNamesKey, AFolderNames,
+      AOptions.OptionMaxPathHistory);
     if LSettings.Find(CWindowLayoutKey, LLayout) then
     begin
       ALayout.Width := LLayout.Get('width', 0);
@@ -187,8 +190,8 @@ begin
   LOptions.Booleans['syncSplitters'] := AOptions.OptionSyncSplitters;
 end;
 
-procedure SaveSettings(const APaths: TPathLists; const ALayout: TWindowLayout;
-  const AOptions: TAppOptions);
+procedure SaveSettings(const APaths: TPathLists; AFolderNames: TStrings;
+  const ALayout: TWindowLayout; const AOptions: TAppOptions);
 var
   LFileName, LTempName: string;
   LIndex: Integer;
@@ -203,6 +206,7 @@ begin
   try
     for LIndex := 0 to CPanelCount - 1 do
       SavePathList(LSettings, CRecentPathsKeys[LIndex], APaths[LIndex]);
+    SavePathList(LSettings, CFolderNamesKey, AFolderNames);
     LLayout := GetSettingsSection(LSettings, CWindowLayoutKey);
     LLayout.Integers['width'] := ALayout.Width;
     LLayout.Integers['height'] := ALayout.Height;

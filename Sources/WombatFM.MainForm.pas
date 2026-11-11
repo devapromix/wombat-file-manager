@@ -32,6 +32,7 @@ type
     tbForward: TToolButton;
     tbHome: TToolButton;
     tbDownloads: TToolButton;
+    tbNewFolder: TToolButton;
     tbRefresh: TToolButton;
     tbUp: TToolButton;
     tlbMain: TToolBar;
@@ -52,10 +53,12 @@ type
     procedure tbForwardClick(Sender: TObject);
     procedure tbHomeClick(Sender: TObject);
     procedure tbDownloadsClick(Sender: TObject);
+    procedure tbNewFolderClick(Sender: TObject);
     procedure tbRefreshClick(Sender: TObject);
     procedure tbUpClick(Sender: TObject);
   private
     FActivePanel: TFilePanelFrame;
+    FFolderNames: TStringList;
     FLayoutClientHeight: Integer;
     FLayoutClientWidth: Integer;
     FPanels: array[0..CPanelCount - 1] of TFilePanelFrame;
@@ -76,6 +79,8 @@ type
     function GetRowIndex(ASplitter: TSplitter): Integer;
     procedure PanelActivate(Sender: TObject);
     procedure SyncLeftPanelRatios(ASourceRow: Integer);
+  public
+    destructor Destroy; override;
   end;
 
 var
@@ -84,7 +89,8 @@ var
 implementation
 
 uses
-  Dialogs, LCLType, Math, WombatFM.Settings;
+  Dialogs, LCLType, Math, WombatFM.History, WombatFM.NewFolder,
+  WombatFM.Settings;
 
 {$R *.lfm}
 
@@ -120,6 +126,7 @@ var
   LIndex: Integer;
   LLayout: TWindowLayout;
 begin
+  FFolderNames := TStringList.Create;
   for LIndex := 0 to CRowCount - 1 do
     FLeftPanelRatios[LIndex] := 0.5;
   FTopPanelRatio := 0.5;
@@ -134,7 +141,7 @@ begin
     LPaths[LIndex] := FPanels[LIndex].cbPath.Text;
   end;
   try
-    LoadSettings(GetPathLists, LLayout, FOptions);
+    LoadSettings(GetPathLists, FFolderNames, LLayout, FOptions);
     ApplyOptions;
     if (LLayout.Width > 0) and (LLayout.Height > 0) then
       SetBounds(Left, Top, Min(LLayout.Width, Screen.WorkAreaWidth),
@@ -152,6 +159,12 @@ begin
   OnClose := @FormClose;
   PanelActivate(FilePanel1);
   ActiveControl := FilePanel1.lvFiles;
+end;
+
+destructor TMainForm.Destroy;
+begin
+  FFolderNames.Free;
+  inherited Destroy;
 end;
 
 procedure TMainForm.FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
@@ -285,7 +298,7 @@ begin
   LLayout.BottomLeftPanelWidth := GetLeftPanel(1).Width;
   LLayout.TopPanelHeight := pnlTop.Height;
   try
-    SaveSettings(GetPathLists, LLayout, FOptions);
+    SaveSettings(GetPathLists, FFolderNames, LLayout, FOptions);
   except
     on E: Exception do
       ShowMessage('Could not save settings: ' + E.Message);
@@ -377,6 +390,26 @@ begin
   LDownloadsPath := IncludeTrailingPathDelimiter(GetUserDir) + 'Downloads';
   if DirectoryExists(LDownloadsPath) then
     FActivePanel.NavigateTo(LDownloadsPath);
+end;
+
+procedure TMainForm.tbNewFolderClick(Sender: TObject);
+var
+  LForm: TNewFolderForm;
+  LCreated: Boolean;
+begin
+  LForm := TNewFolderForm.Create(Self);
+  try
+    LForm.History := FFolderNames;
+    if LForm.ShowModal = mrOk then
+    begin
+      FActivePanel.CreateFolder(LForm.FolderName, LCreated);
+      if LCreated then
+        AddRecentPath(FFolderNames, LForm.FolderName,
+          FOptions.OptionMaxPathHistory);
+    end;
+  finally
+    LForm.Free;
+  end;
 end;
 
 procedure TMainForm.tbRefreshClick(Sender: TObject);

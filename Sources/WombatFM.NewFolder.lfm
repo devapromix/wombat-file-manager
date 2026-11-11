@@ -1,0 +1,46 @@
+object NewFolderForm: TNewFolderForm
+  Left = 529
+  Height = 120
+  Top = 347
+  Width = 340
+  ActiveControl = cbFolderName
+  BorderStyle = bsDialog
+  Caption = 'New folder'
+  ClientHeight = 120
+  ClientWidth = 340
+  Position = poOwnerFormCenter
+  LCLVersion = '4.8.0.0'
+  object lblFolderName: TLabel
+    Left = 16
+    Height = 15
+    Top = 16
+    Width = 73
+    Caption = 'Folder name:'
+    FocusControl = cbFolderName
+    ParentColor = False
+  end
+  object cbFolderName: TComboBox
+    Left = 16
+    Height = 23
+    Top = 38
+    Width = 308
+    ItemHeight = 15
+    TabOrder = 0
+  end
+  object ButtonPanel: TButtonPanel
+    Left = 6
+    Height = 34
+    Top = 80
+    Width = 328
+    OKButton.Name = 'OKButton'
+    OKButton.DefaultCaption = True
+    HelpButton.Name = 'HelpButton'
+    HelpButton.DefaultCaption = True
+    CloseButton.Name = 'CloseButton'
+    CloseButton.DefaultCaption = True
+    CancelButton.Name = 'CancelButton'
+    CancelButton.DefaultCaption = True
+    TabOrder = 1
+    ShowButtons = [pbOK, pbCancel]
+  end
+end
