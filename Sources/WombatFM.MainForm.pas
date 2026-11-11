@@ -187,13 +187,13 @@ end;
 function TMainForm.GetClampedLeftWidth(AWidth: Integer): Integer;
 begin
   Result := GetClampedSize(AWidth, ClientWidth, PanelSplitter.Width,
-    Ceil(ClientWidth / 10));
+    Ceil(ClientWidth / 20));
 end;
 
 function TMainForm.GetClampedTopHeight(AHeight: Integer): Integer;
 begin
   Result := GetClampedSize(AHeight, GetBodyHeight, RowSplitter.Height,
-    Ceil(ClientHeight / 10));
+    Ceil(ClientHeight / 20));
 end;
 
 procedure TMainForm.ApplyPanelRatios;

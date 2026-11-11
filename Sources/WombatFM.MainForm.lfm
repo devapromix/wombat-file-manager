@@ -91,7 +91,6 @@ object MainForm: TMainForm
       Align = alLeft
       ClientHeight = 214
       ClientWidth = 375
-      TabOrder = 0
       inherited sbStatus: TStatusBar
         Top = 191
         Width = 375
@@ -100,17 +99,17 @@ object MainForm: TMainForm
         Width = 375
         ClientWidth = 375
         inherited btnRoot: TButton
-          Left = 341
+          Left = 320
         end
       end
       inherited pnlPath: TPanel
         Width = 375
         ClientWidth = 375
         inherited btnBrowse: TButton
-          Left = 341
+          Left = 320
         end
         inherited cbPath: TComboBox
-          Width = 341
+          Width = 320
         end
       end
       inherited lvFiles: TListView
@@ -125,6 +124,7 @@ object MainForm: TMainForm
     object PanelSplitter: TSplitter
       Left = 375
       Height = 214
+      Top = 0
       Width = 6
       AutoSnap = False
       MinSize = 1
@@ -147,17 +147,17 @@ object MainForm: TMainForm
         Width = 375
         ClientWidth = 375
         inherited btnRoot: TButton
-          Left = 341
+          Left = 320
         end
       end
       inherited pnlPath: TPanel
         Width = 375
         ClientWidth = 375
         inherited btnBrowse: TButton
-          Left = 341
+          Left = 320
         end
         inherited cbPath: TComboBox
-          Width = 341
+          Width = 320
         end
       end
       inherited lvFiles: TListView
@@ -199,7 +199,6 @@ object MainForm: TMainForm
       Align = alLeft
       ClientHeight = 214
       ClientWidth = 375
-      TabOrder = 0
       inherited sbStatus: TStatusBar
         Top = 191
         Width = 375
@@ -208,17 +207,17 @@ object MainForm: TMainForm
         Width = 375
         ClientWidth = 375
         inherited btnRoot: TButton
-          Left = 341
+          Left = 320
         end
       end
       inherited pnlPath: TPanel
         Width = 375
         ClientWidth = 375
         inherited btnBrowse: TButton
-          Left = 341
+          Left = 320
         end
         inherited cbPath: TComboBox
-          Width = 341
+          Width = 320
         end
       end
       inherited lvFiles: TListView
@@ -233,6 +232,7 @@ object MainForm: TMainForm
     object BottomSplitter: TSplitter
       Left = 375
       Height = 214
+      Top = 0
       Width = 6
       AutoSnap = False
       MinSize = 1
@@ -255,17 +255,17 @@ object MainForm: TMainForm
         Width = 375
         ClientWidth = 375
         inherited btnRoot: TButton
-          Left = 341
+          Left = 320
         end
       end
       inherited pnlPath: TPanel
         Width = 375
         ClientWidth = 375
         inherited btnBrowse: TButton
-          Left = 341
+          Left = 320
         end
         inherited cbPath: TComboBox
-          Width = 341
+          Width = 320
         end
       end
       inherited lvFiles: TListView
