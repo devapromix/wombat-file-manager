@@ -7,7 +7,8 @@ interface
 uses
   Classes, SysUtils, Contnrs, Math, Graphics, Forms, Controls, StdCtrls,
   ExtCtrls, ComCtrls, Buttons, Dialogs, LCLType, LazUTF8, LazFileUtils,
-  WombatFM.Drives, WombatFM.History, WombatFM.Icons, WombatFM.Options;
+  WombatFM.Bookmarks, WombatFM.Drives, WombatFM.History, WombatFM.Icons,
+  WombatFM.Options;
 
 type
   TFileEntry = class
@@ -25,7 +26,7 @@ type
   { TFilePanelFrame }
 
   TFilePanelFrame = class(TFrame)
-    btnBrowse: TButton;
+    btnBookmarks: TButton;
     btnBrowse1: TButton;
     btnRoot: TButton;
     cbPath: TComboBox;
@@ -34,6 +35,7 @@ type
     pnlDrives: TPanel;
     pnlPath: TPanel;
     sbStatus: TStatusBar;
+    procedure btnBookmarksClick(Sender: TObject);
     procedure btnBrowseClick(Sender: TObject);
     procedure btnRootClick(Sender: TObject);
     procedure cbPathChange(Sender: TObject);
@@ -48,6 +50,7 @@ type
     procedure lvFilesKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
     procedure pnlDrivesClick(Sender: TObject);
   private
+    FBookmarkMenu: TBookmarkPopupMenu;
     FCurrentPath: string;
     FHistory: TPathHistory;
     FEntries: TFPObjectList;
@@ -56,6 +59,7 @@ type
     FSortColumn: integer;
     FSortDescending: boolean;
     procedure AddToHistory;
+    procedure BookmarkSelected(const APath: string);
     procedure CreateDriveButtons;
     procedure DrawCursorItem(AItem: TListItem);
     procedure DriveButtonClick(Sender: TObject);
@@ -70,6 +74,7 @@ type
     procedure MoveHistory(ADirection: THistoryDirection);
     procedure OpenSelected;
     procedure SelectEntry(const AName: string);
+    procedure SetBookmarks(AValue: TStrings);
     procedure UpdateDriveButtons;
     procedure UpdateSortIndicator;
   public
@@ -84,6 +89,7 @@ type
     procedure NavigateTo(const APath: string);
     procedure Reload;
     procedure SetActive(AValue: boolean);
+    property Bookmarks: TStrings write SetBookmarks;
     property CurrentPath: string read FCurrentPath;
     property OnActivate: TNotifyEvent read FOnActivate write FOnActivate;
   end;
@@ -208,6 +214,8 @@ constructor TFilePanelFrame.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
   FOptions := GetDefaultOptions;
+  FBookmarkMenu := TBookmarkPopupMenu.Create(Self);
+  FBookmarkMenu.OnBookmarkSelect := @BookmarkSelected;
   FHistory := TPathHistory.Create;
   FEntries := TFPObjectList.Create(True);
   lvFiles.SmallImages := GetIconList;
@@ -278,6 +286,22 @@ procedure TFilePanelFrame.AddToHistory;
 begin
   AddRecentPath(cbPath.Items, FCurrentPath, FOptions.OptionMaxPathHistory);
   cbPath.Text := FCurrentPath;
+end;
+
+procedure TFilePanelFrame.SetBookmarks(AValue: TStrings);
+begin
+  FBookmarkMenu.Bookmarks := AValue;
+end;
+
+procedure TFilePanelFrame.BookmarkSelected(const APath: string);
+begin
+  lvFiles.SetFocus;
+  NavigateTo(APath);
+end;
+
+procedure TFilePanelFrame.btnBookmarksClick(Sender: TObject);
+begin
+  FBookmarkMenu.ShowFor(btnBookmarks, FCurrentPath);
 end;
 
 procedure TFilePanelFrame.UpdateSortIndicator;

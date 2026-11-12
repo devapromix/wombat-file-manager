@@ -111,7 +111,7 @@ object MainForm: TMainForm
       inherited pnlPath: TPanel
         Width = 375
         ClientWidth = 375
-        inherited btnBrowse: TButton
+        inherited btnBookmarks: TButton
           Left = 320
         end
         inherited cbPath: TComboBox
@@ -159,7 +159,7 @@ object MainForm: TMainForm
       inherited pnlPath: TPanel
         Width = 375
         ClientWidth = 375
-        inherited btnBrowse: TButton
+        inherited btnBookmarks: TButton
           Left = 320
         end
         inherited cbPath: TComboBox
@@ -219,7 +219,7 @@ object MainForm: TMainForm
       inherited pnlPath: TPanel
         Width = 375
         ClientWidth = 375
-        inherited btnBrowse: TButton
+        inherited btnBookmarks: TButton
           Left = 320
         end
         inherited cbPath: TComboBox
@@ -267,7 +267,7 @@ object MainForm: TMainForm
       inherited pnlPath: TPanel
         Width = 375
         ClientWidth = 375
-        inherited btnBrowse: TButton
+        inherited btnBookmarks: TButton
           Left = 320
         end
         inherited cbPath: TComboBox

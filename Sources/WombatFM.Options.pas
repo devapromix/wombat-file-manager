@@ -28,9 +28,9 @@ type
   end;
 
 function GetDefaultOptions: TAppOptions;
-procedure LoadSettings(const APaths: TPathLists; AFolderNames: TStrings;
+procedure LoadSettings(const APaths: TPathLists; AFolderNames, ABookmarks: TStrings;
   out ALayout: TWindowLayout; out AOptions: TAppOptions);
-procedure SaveSettings(const APaths: TPathLists; AFolderNames: TStrings;
+procedure SaveSettings(const APaths: TPathLists; AFolderNames, ABookmarks: TStrings;
   const ALayout: TWindowLayout; const AOptions: TAppOptions);
 
 implementation
@@ -44,6 +44,7 @@ const
   CRecentPathsKeys: array[0..CPanelCount - 1] of string = ('topLeftRecentPaths',
     'topRightRecentPaths', 'bottomLeftRecentPaths', 'bottomRightRecentPaths');
   CFolderNamesKey = 'folderNameHistory';
+  CBookmarksKey = 'bookmarks';
   CWindowLayoutKey = 'windowLayout';
   COptionsKey = 'options';
 
@@ -130,7 +131,7 @@ begin
   end;
 end;
 
-procedure LoadSettings(const APaths: TPathLists; AFolderNames: TStrings;
+procedure LoadSettings(const APaths: TPathLists; AFolderNames, ABookmarks: TStrings;
   out ALayout: TWindowLayout; out AOptions: TAppOptions);
 var
   LSettings, LLayout: TJSONObject;
@@ -145,6 +146,7 @@ begin
         AOptions.OptionMaxPathHistory);
     LoadPathList(LSettings, CFolderNamesKey, AFolderNames,
       AOptions.OptionMaxPathHistory);
+    LoadPathList(LSettings, CBookmarksKey, ABookmarks, MaxInt);
     if LSettings.Find(CWindowLayoutKey, LLayout) then
     begin
       ALayout.Width := LLayout.Get('width', 0);
@@ -190,7 +192,7 @@ begin
   LOptions.Booleans['syncSplitters'] := AOptions.OptionSyncSplitters;
 end;
 
-procedure SaveSettings(const APaths: TPathLists; AFolderNames: TStrings;
+procedure SaveSettings(const APaths: TPathLists; AFolderNames, ABookmarks: TStrings;
   const ALayout: TWindowLayout; const AOptions: TAppOptions);
 var
   LFileName, LTempName: string;
@@ -207,6 +209,7 @@ begin
     for LIndex := 0 to CPanelCount - 1 do
       SavePathList(LSettings, CRecentPathsKeys[LIndex], APaths[LIndex]);
     SavePathList(LSettings, CFolderNamesKey, AFolderNames);
+    SavePathList(LSettings, CBookmarksKey, ABookmarks);
     LLayout := GetSettingsSection(LSettings, CWindowLayoutKey);
     LLayout.Integers['width'] := ALayout.Width;
     LLayout.Integers['height'] := ALayout.Height;

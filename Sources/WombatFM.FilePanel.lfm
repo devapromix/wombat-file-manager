@@ -49,7 +49,7 @@ object FilePanelFrame: TFilePanelFrame
     ClientHeight = 23
     ClientWidth = 768
     TabOrder = 2
-    object btnBrowse: TButton
+    object btnBookmarks: TButton
       Left = 722
       Height = 23
       Top = 0
@@ -57,6 +57,8 @@ object FilePanelFrame: TFilePanelFrame
       Align = alRight
       Caption = '*'
       TabOrder = 0
+      OnClick = btnBookmarksClick
+      OnEnter = ControlActivated
     end
     object cbPath: TComboBox
       Left = 0

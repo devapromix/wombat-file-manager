@@ -58,6 +58,7 @@ type
     procedure tbUpClick(Sender: TObject);
   private
     FActivePanel: TFilePanelFrame;
+    FBookmarks: TStringList;
     FFolderNames: TStringList;
     FLayoutClientHeight: Integer;
     FLayoutClientWidth: Integer;
@@ -127,6 +128,7 @@ var
   LLayout: TWindowLayout;
 begin
   FFolderNames := TStringList.Create;
+  FBookmarks := TStringList.Create;
   for LIndex := 0 to CRowCount - 1 do
     FLeftPanelRatios[LIndex] := 0.5;
   FTopPanelRatio := 0.5;
@@ -137,11 +139,12 @@ begin
   for LIndex := 0 to CPanelCount - 1 do
   begin
     FPanels[LIndex].OnActivate := @PanelActivate;
+    FPanels[LIndex].Bookmarks := FBookmarks;
     FPanels[LIndex].GoHome;
     LPaths[LIndex] := FPanels[LIndex].cbPath.Text;
   end;
   try
-    LoadSettings(GetPathLists, FFolderNames, LLayout, FOptions);
+    LoadSettings(GetPathLists, FFolderNames, FBookmarks, LLayout, FOptions);
     ApplyOptions;
     if (LLayout.Width > 0) and (LLayout.Height > 0) then
       SetBounds(Left, Top, Min(LLayout.Width, Screen.WorkAreaWidth),
@@ -163,6 +166,7 @@ end;
 
 destructor TMainForm.Destroy;
 begin
+  FBookmarks.Free;
   FFolderNames.Free;
   inherited Destroy;
 end;
@@ -298,7 +302,7 @@ begin
   LLayout.BottomLeftPanelWidth := GetLeftPanel(1).Width;
   LLayout.TopPanelHeight := pnlTop.Height;
   try
-    SaveSettings(GetPathLists, FFolderNames, LLayout, FOptions);
+    SaveSettings(GetPathLists, FFolderNames, FBookmarks, LLayout, FOptions);
   except
     on E: Exception do
       ShowMessage('Could not save settings: ' + E.Message);
