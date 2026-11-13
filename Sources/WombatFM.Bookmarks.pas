@@ -5,14 +5,14 @@ unit WombatFM.Bookmarks;
 interface
 
 uses
-  Classes, SysUtils, Types, Controls, Menus;
+  Classes, SysUtils, Types, Controls, Menus, WombatFM.BookmarkList;
 
 type
   TBookmarkSelectEvent = procedure(const APath: string) of object;
 
   TBookmarkPopupMenu = class(TPopupMenu)
   private
-    FBookmarks: TStrings;
+    FBookmarks: TBookmarkList;
     FCurrentPath: string;
     FOnBookmarkSelect: TBookmarkSelectEvent;
     procedure AddBookmarkClick(Sender: TObject);
@@ -23,7 +23,7 @@ type
     procedure BuildItems;
   public
     procedure ShowFor(AControl: TControl; const APath: string);
-    property Bookmarks: TStrings read FBookmarks write FBookmarks;
+    property Bookmarks: TBookmarkList read FBookmarks write FBookmarks;
     property OnBookmarkSelect: TBookmarkSelectEvent read FOnBookmarkSelect
       write FOnBookmarkSelect;
   end;
@@ -31,7 +31,7 @@ type
 implementation
 
 uses
-  WombatFM.BookmarkForm;
+  WombatFM.BookmarkForm, WombatFM.BookmarkNameForm;
 
 const
   CAddBookmarkCaption = 'Add bookmark';
@@ -56,12 +56,12 @@ var
 begin
   Items.Clear;
   for LIndex := 0 to FBookmarks.Count - 1 do
-    AddMenuItem(StringReplace(FBookmarks[LIndex], '&', '&&', [rfReplaceAll]),
+    AddMenuItem(StringReplace(FBookmarks[LIndex].Name, '&', '&&', [rfReplaceAll]),
       @BookmarkClick, LIndex);
   if FBookmarks.Count > 0 then
     AddMenuItem(CMenuSeparator, nil, 0);
   AddMenuItem(CAddBookmarkCaption, @AddBookmarkClick, 0,
-    FBookmarks.IndexOf(FCurrentPath) < 0);
+    FBookmarks.IndexOfPath(FCurrentPath) < 0);
   AddMenuItem('Edit Bookmarks', @EditBookmarksClick, 0);
 end;
 
@@ -78,7 +78,7 @@ end;
 procedure TBookmarkPopupMenu.BookmarkClick(Sender: TObject);
 begin
   if Assigned(FOnBookmarkSelect) then
-    FOnBookmarkSelect(FBookmarks[(Sender as TMenuItem).Tag]);
+    FOnBookmarkSelect(FBookmarks[(Sender as TMenuItem).Tag].Path);
 end;
 
 procedure TBookmarkPopupMenu.EditBookmarksClick(Sender: TObject);
@@ -94,8 +94,18 @@ begin
 end;
 
 procedure TBookmarkPopupMenu.AddBookmarkClick(Sender: TObject);
+var
+  LForm: TBookmarkNameForm;
+  LName: string;
 begin
-  FBookmarks.Add(FCurrentPath);
+  LName := DefaultBookmarkName(FCurrentPath);
+  LForm := TBookmarkNameForm.Create(nil);
+  try
+    if LForm.Prompt(LName) then
+      FBookmarks.AddBookmark(LName, FCurrentPath);
+  finally
+    LForm.Free;
+  end;
 end;
 
 end.

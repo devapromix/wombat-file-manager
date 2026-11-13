@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils, Contnrs, Math, Graphics, Forms, Controls, StdCtrls,
   ExtCtrls, ComCtrls, Buttons, Dialogs, LCLType, LazUTF8, LazFileUtils,
-  WombatFM.Bookmarks, WombatFM.Drives, WombatFM.History, WombatFM.Icons,
+  WombatFM.Bookmarks, WombatFM.BookmarkList, WombatFM.Drives, WombatFM.History, WombatFM.Icons,
   WombatFM.Options;
 
 type
@@ -74,7 +74,7 @@ type
     procedure MoveHistory(ADirection: THistoryDirection);
     procedure OpenSelected;
     procedure SelectEntry(const AName: string);
-    procedure SetBookmarks(AValue: TStrings);
+    procedure SetBookmarks(AValue: TBookmarkList);
     procedure UpdateDriveButtons;
     procedure UpdateSortIndicator;
   public
@@ -89,7 +89,7 @@ type
     procedure NavigateTo(const APath: string);
     procedure Reload;
     procedure SetActive(AValue: boolean);
-    property Bookmarks: TStrings write SetBookmarks;
+    property Bookmarks: TBookmarkList write SetBookmarks;
     property CurrentPath: string read FCurrentPath;
     property OnActivate: TNotifyEvent read FOnActivate write FOnActivate;
   end;
@@ -288,7 +288,7 @@ begin
   cbPath.Text := FCurrentPath;
 end;
 
-procedure TFilePanelFrame.SetBookmarks(AValue: TStrings);
+procedure TFilePanelFrame.SetBookmarks(AValue: TBookmarkList);
 begin
   FBookmarkMenu.Bookmarks := AValue;
 end;

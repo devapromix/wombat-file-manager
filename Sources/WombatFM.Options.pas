@@ -5,7 +5,7 @@ unit WombatFM.Options;
 interface
 
 uses
-  Classes, SysUtils;
+  Classes, SysUtils, WombatFM.BookmarkList;
 
 const
   CPanelCount = 4;
@@ -28,9 +28,9 @@ type
   end;
 
 function GetDefaultOptions: TAppOptions;
-procedure LoadSettings(const APaths: TPathLists; AFolderNames, ABookmarks: TStrings;
+procedure LoadSettings(const APaths: TPathLists; AFolderNames: TStrings; ABookmarks: TBookmarkList;
   out ALayout: TWindowLayout; out AOptions: TAppOptions);
-procedure SaveSettings(const APaths: TPathLists; AFolderNames, ABookmarks: TStrings;
+procedure SaveSettings(const APaths: TPathLists; AFolderNames: TStrings; ABookmarks: TBookmarkList;
   const ALayout: TWindowLayout; const AOptions: TAppOptions);
 
 implementation
@@ -115,6 +115,51 @@ begin
   end;
 end;
 
+procedure LoadBookmarks(ASettings: TJSONObject; ABookmarks: TBookmarkList);
+var
+  LItems: TJSONArray;
+  LItem: TJSONData;
+  LIndex: integer;
+  LName, LPath: string;
+begin
+  if not ASettings.Find(CBookmarksKey, LItems) then
+    Exit;
+  ABookmarks.Clear;
+  for LIndex := 0 to LItems.Count - 1 do
+  begin
+    LItem := LItems.Items[LIndex];
+    LName := '';
+    case LItem.JSONType of
+      jtString: LPath := LItem.AsString;
+      jtObject:
+        begin
+          LPath := TJSONObject(LItem).Get('path', '');
+          LName := TJSONObject(LItem).Get('name', '');
+        end;
+      else
+        Continue;
+    end;
+    if (LPath = '') or (ABookmarks.IndexOfPath(LPath) >= 0) then
+      Continue;
+    if Trim(LName) = '' then
+      LName := DefaultBookmarkName(LPath);
+    ABookmarks.AddBookmark(LName, LPath);
+  end;
+end;
+
+procedure SaveBookmarks(ASettings: TJSONObject; ABookmarks: TBookmarkList);
+var
+  LItems: TJSONArray;
+  LIndex: integer;
+begin
+  ASettings.Delete(CBookmarksKey);
+  LItems := TJSONArray.Create;
+  ASettings.Add(CBookmarksKey, LItems);
+  for LIndex := 0 to ABookmarks.Count - 1 do
+    LItems.Add(TJSONObject.Create(['name', ABookmarks[LIndex].Name,
+      'path', ABookmarks[LIndex].Path]));
+end;
+
 procedure LoadOptions(ASettings: TJSONObject; out AOptions: TAppOptions);
 var
   LOptions: TJSONObject;
@@ -131,7 +176,7 @@ begin
   end;
 end;
 
-procedure LoadSettings(const APaths: TPathLists; AFolderNames, ABookmarks: TStrings;
+procedure LoadSettings(const APaths: TPathLists; AFolderNames: TStrings; ABookmarks: TBookmarkList;
   out ALayout: TWindowLayout; out AOptions: TAppOptions);
 var
   LSettings, LLayout: TJSONObject;
@@ -146,7 +191,7 @@ begin
         AOptions.OptionMaxPathHistory);
     LoadPathList(LSettings, CFolderNamesKey, AFolderNames,
       AOptions.OptionMaxPathHistory);
-    LoadPathList(LSettings, CBookmarksKey, ABookmarks, MaxInt);
+    LoadBookmarks(LSettings, ABookmarks);
     if LSettings.Find(CWindowLayoutKey, LLayout) then
     begin
       ALayout.Width := LLayout.Get('width', 0);
@@ -192,7 +237,7 @@ begin
   LOptions.Booleans['syncSplitters'] := AOptions.OptionSyncSplitters;
 end;
 
-procedure SaveSettings(const APaths: TPathLists; AFolderNames, ABookmarks: TStrings;
+procedure SaveSettings(const APaths: TPathLists; AFolderNames: TStrings; ABookmarks: TBookmarkList;
   const ALayout: TWindowLayout; const AOptions: TAppOptions);
 var
   LFileName, LTempName: string;
@@ -209,7 +254,7 @@ begin
     for LIndex := 0 to CPanelCount - 1 do
       SavePathList(LSettings, CRecentPathsKeys[LIndex], APaths[LIndex]);
     SavePathList(LSettings, CFolderNamesKey, AFolderNames);
-    SavePathList(LSettings, CBookmarksKey, ABookmarks);
+    SaveBookmarks(LSettings, ABookmarks);
     LLayout := GetSettingsSection(LSettings, CWindowLayoutKey);
     LLayout.Integers['width'] := ALayout.Width;
     LLayout.Integers['height'] := ALayout.Height;

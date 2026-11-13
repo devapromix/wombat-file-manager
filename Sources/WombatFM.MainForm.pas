@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, ComCtrls, ExtCtrls, Menus, WombatFM.FilePanel,
-  WombatFM.Options;
+  WombatFM.BookmarkList, WombatFM.Options;
 
 const
   CRowCount = 2;
@@ -58,7 +58,7 @@ type
     procedure tbUpClick(Sender: TObject);
   private
     FActivePanel: TFilePanelFrame;
-    FBookmarks: TStringList;
+    FBookmarks: TBookmarkList;
     FFolderNames: TStringList;
     FLayoutClientHeight: Integer;
     FLayoutClientWidth: Integer;
@@ -128,7 +128,7 @@ var
   LLayout: TWindowLayout;
 begin
   FFolderNames := TStringList.Create;
-  FBookmarks := TStringList.Create;
+  FBookmarks := TBookmarkList.Create;
   for LIndex := 0 to CRowCount - 1 do
     FLeftPanelRatios[LIndex] := 0.5;
   FTopPanelRatio := 0.5;

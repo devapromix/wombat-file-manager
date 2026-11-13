@@ -59,6 +59,15 @@ object BookmarkForm: TBookmarkForm
       TabOrder = 2
       OnClick = DeleteBookmark
     end
+    object btnRename: TButton
+      Left = 8
+      Height = 30
+      Top = 116
+      Width = 104
+      Caption = 'Rename'
+      TabOrder = 3
+      OnClick = RenameBookmark
+    end
     object btnClose: TButton
       Left = 8
       Height = 30
@@ -67,7 +76,7 @@ object BookmarkForm: TBookmarkForm
       Cancel = True
       Caption = 'Close'
       ModalResult = 11
-      TabOrder = 3
+      TabOrder = 4
     end
   end
 end
