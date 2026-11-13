@@ -1,0 +1,73 @@
+object BookmarkForm: TBookmarkForm
+  Left = 350
+  Height = 343
+  Top = 250
+  Width = 600
+  ActiveControl = lbBookmarks
+  Caption = 'Edit Bookmarks'
+  ClientHeight = 343
+  ClientWidth = 600
+  Constraints.MinHeight = 235
+  Constraints.MinWidth = 380
+  Position = poMainFormCenter
+  LCLVersion = '4.8.0.0'
+  object lbBookmarks: TListBox
+    Left = 8
+    Height = 324
+    Top = 8
+    Width = 472
+    ItemHeight = 0
+    TabOrder = 0
+    OnSelectionChange = UpdateButtons
+  end
+  object pnlButtons: TPanel
+    Left = 480
+    Height = 343
+    Top = 0
+    Width = 120
+    Align = alRight
+    BevelOuter = bvNone
+    ClientHeight = 343
+    ClientWidth = 120
+    TabOrder = 1
+    object btnMoveUp: TButton
+      Tag = -1
+      Left = 8
+      Height = 30
+      Top = 8
+      Width = 104
+      Caption = 'Move Up'
+      TabOrder = 0
+      OnClick = MoveBookmark
+    end
+    object btnMoveDown: TButton
+      Tag = 1
+      Left = 8
+      Height = 30
+      Top = 44
+      Width = 104
+      Caption = 'Move Down'
+      TabOrder = 1
+      OnClick = MoveBookmark
+    end
+    object btnDelete: TButton
+      Left = 8
+      Height = 30
+      Top = 80
+      Width = 104
+      Caption = 'Delete'
+      TabOrder = 2
+      OnClick = DeleteBookmark
+    end
+    object btnClose: TButton
+      Left = 8
+      Height = 30
+      Top = 304
+      Width = 104
+      Cancel = True
+      Caption = 'Close'
+      ModalResult = 11
+      TabOrder = 3
+    end
+  end
+end

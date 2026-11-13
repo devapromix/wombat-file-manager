@@ -79,6 +79,13 @@
         <Filename Value="WombatFM.Bookmarks.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit>
+      <Unit>
+        <Filename Value="WombatFM.BookmarkForm.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="BookmarkForm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

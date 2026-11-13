@@ -19,6 +19,7 @@ type
     procedure AddMenuItem(const ACaption: string; AOnClick: TNotifyEvent;
       ATag: integer; AEnabled: boolean = True);
     procedure BookmarkClick(Sender: TObject);
+    procedure EditBookmarksClick(Sender: TObject);
     procedure BuildItems;
   public
     procedure ShowFor(AControl: TControl; const APath: string);
@@ -28,6 +29,9 @@ type
   end;
 
 implementation
+
+uses
+  WombatFM.BookmarkForm;
 
 const
   CAddBookmarkCaption = 'Add bookmark';
@@ -58,6 +62,7 @@ begin
     AddMenuItem(CMenuSeparator, nil, 0);
   AddMenuItem(CAddBookmarkCaption, @AddBookmarkClick, 0,
     FBookmarks.IndexOf(FCurrentPath) < 0);
+  AddMenuItem('Edit Bookmarks', @EditBookmarksClick, 0);
 end;
 
 procedure TBookmarkPopupMenu.ShowFor(AControl: TControl; const APath: string);
@@ -74,6 +79,18 @@ procedure TBookmarkPopupMenu.BookmarkClick(Sender: TObject);
 begin
   if Assigned(FOnBookmarkSelect) then
     FOnBookmarkSelect(FBookmarks[(Sender as TMenuItem).Tag]);
+end;
+
+procedure TBookmarkPopupMenu.EditBookmarksClick(Sender: TObject);
+var
+  LEditor: TBookmarkForm;
+begin
+  LEditor := TBookmarkForm.Create(nil);
+  try
+    LEditor.EditBookmarks(FBookmarks);
+  finally
+    LEditor.Free;
+  end;
 end;
 
 procedure TBookmarkPopupMenu.AddBookmarkClick(Sender: TObject);
