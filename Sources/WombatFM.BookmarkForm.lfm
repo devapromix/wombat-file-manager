@@ -7,7 +7,7 @@ object BookmarkForm: TBookmarkForm
   Caption = 'Edit Bookmarks'
   ClientHeight = 343
   ClientWidth = 600
-  Constraints.MinHeight = 235
+  Constraints.MinHeight = 260
   Constraints.MinWidth = 380
   Position = poMainFormCenter
   LCLVersion = '4.8.0.0'
@@ -68,15 +68,27 @@ object BookmarkForm: TBookmarkForm
       TabOrder = 3
       OnClick = RenameBookmark
     end
-    object btnClose: TButton
+    object btnOK: TButton
+      Left = 8
+      Height = 30
+      Top = 268
+      Width = 104
+      Anchors = [akLeft, akBottom]
+      Caption = 'OK'
+      Default = True
+      ModalResult = 1
+      TabOrder = 4
+    end
+    object btnCancel: TButton
       Left = 8
       Height = 30
       Top = 304
       Width = 104
+      Anchors = [akLeft, akBottom]
       Cancel = True
-      Caption = 'Close'
-      ModalResult = 11
-      TabOrder = 4
+      Caption = 'Cancel'
+      ModalResult = 2
+      TabOrder = 5
     end
   end
 end

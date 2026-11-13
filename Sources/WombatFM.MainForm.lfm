@@ -653,6 +653,10 @@ object MainForm: TMainForm
         Caption = 'Settings...'
         OnClick = miSettingsClick
       end
+      object miSaveSettings: TMenuItem
+        Caption = 'Save Settings'
+        OnClick = SaveCurrentSettings
+      end
     end
   end
 end

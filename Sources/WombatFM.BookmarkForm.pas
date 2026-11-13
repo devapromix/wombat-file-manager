@@ -5,7 +5,7 @@ unit WombatFM.BookmarkForm;
 interface
 
 uses
-  Classes, Forms, Controls, StdCtrls, ExtCtrls, Dialogs, WombatFM.BookmarkList;
+  Classes, SysUtils, Forms, Controls, StdCtrls, ExtCtrls, Dialogs, WombatFM.BookmarkList;
 
 type
   TBookmarkForm = class(TForm)
@@ -15,7 +15,8 @@ type
     btnMoveDown: TButton;
     btnDelete: TButton;
     btnRename: TButton;
-    btnClose: TButton;
+    btnOK: TButton;
+    btnCancel: TButton;
     procedure UpdateButtons(Sender: TObject; User: boolean);
     procedure MoveBookmark(Sender: TObject);
     procedure DeleteBookmark(Sender: TObject);
@@ -23,7 +24,7 @@ type
   private
     FBookmarks: TBookmarkList;
   public
-    procedure EditBookmarks(ABookmarks: TBookmarkList);
+    function EditBookmarks(ABookmarks: TBookmarkList): boolean;
   end;
 
 implementation
@@ -33,20 +34,32 @@ uses
 
 {$R *.lfm}
 
-procedure TBookmarkForm.EditBookmarks(ABookmarks: TBookmarkList);
+function TBookmarkForm.EditBookmarks(ABookmarks: TBookmarkList): boolean;
 var
   LIndex: integer;
 begin
-  FBookmarks := ABookmarks;
-  lbBookmarks.Items.Clear;
-  for LIndex := 0 to FBookmarks.Count - 1 do
-    lbBookmarks.Items.Add(FBookmarks[LIndex].Name);
-  if lbBookmarks.Count > 0 then
-    lbBookmarks.ItemIndex := 0;
-  UpdateButtons(nil, False);
-  ShowModal;
+  FBookmarks := TBookmarkList.Create;
+  try
+    lbBookmarks.Items.Clear;
+    for LIndex := 0 to ABookmarks.Count - 1 do
+    begin
+      FBookmarks.Add(ABookmarks[LIndex]);
+      lbBookmarks.Items.Add(ABookmarks[LIndex].Name);
+    end;
+    if lbBookmarks.Count > 0 then
+      lbBookmarks.ItemIndex := 0;
+    UpdateButtons(nil, False);
+    Result := ShowModal = mrOK;
+    if Result then
+    begin
+      ABookmarks.Clear;
+      for LIndex := 0 to FBookmarks.Count - 1 do
+        ABookmarks.Add(FBookmarks[LIndex]);
+    end;
+  finally
+    FreeAndNil(FBookmarks);
+  end;
 end;
-
 
 procedure TBookmarkForm.UpdateButtons(Sender: TObject; User: boolean);
 var

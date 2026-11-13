@@ -75,6 +75,7 @@ type
     procedure OpenSelected;
     procedure SelectEntry(const AName: string);
     procedure SetBookmarks(AValue: TBookmarkList);
+    procedure SetOnBookmarksAccepted(AValue: TNotifyEvent);
     procedure UpdateDriveButtons;
     procedure UpdateSortIndicator;
   public
@@ -90,6 +91,7 @@ type
     procedure Reload;
     procedure SetActive(AValue: boolean);
     property Bookmarks: TBookmarkList write SetBookmarks;
+    property OnBookmarksAccepted: TNotifyEvent write SetOnBookmarksAccepted;
     property CurrentPath: string read FCurrentPath;
     property OnActivate: TNotifyEvent read FOnActivate write FOnActivate;
   end;
@@ -291,6 +293,11 @@ end;
 procedure TFilePanelFrame.SetBookmarks(AValue: TBookmarkList);
 begin
   FBookmarkMenu.Bookmarks := AValue;
+end;
+
+procedure TFilePanelFrame.SetOnBookmarksAccepted(AValue: TNotifyEvent);
+begin
+  FBookmarkMenu.OnBookmarksAccepted := AValue;
 end;
 
 procedure TFilePanelFrame.BookmarkSelected(const APath: string);

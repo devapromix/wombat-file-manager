@@ -28,6 +28,7 @@ type
     miExit: TMenuItem;
     miOptions: TMenuItem;
     miSettings: TMenuItem;
+    miSaveSettings: TMenuItem;
     tbBack: TToolButton;
     tbForward: TToolButton;
     tbHome: TToolButton;
@@ -49,6 +50,7 @@ type
     procedure RowSplitterMoved(Sender: TObject);
     procedure miExitClick(Sender: TObject);
     procedure miSettingsClick(Sender: TObject);
+    procedure SaveCurrentSettings(Sender: TObject);
     procedure tbBackClick(Sender: TObject);
     procedure tbForwardClick(Sender: TObject);
     procedure tbHomeClick(Sender: TObject);
@@ -140,6 +142,7 @@ begin
   begin
     FPanels[LIndex].OnActivate := @PanelActivate;
     FPanels[LIndex].Bookmarks := FBookmarks;
+    FPanels[LIndex].OnBookmarksAccepted := @SaveCurrentSettings;
     FPanels[LIndex].GoHome;
     LPaths[LIndex] := FPanels[LIndex].cbPath.Text;
   end;
@@ -293,6 +296,11 @@ begin
 end;
 
 procedure TMainForm.FormClose(Sender: TObject; var CloseAction: TCloseAction);
+begin
+  SaveCurrentSettings(Sender);
+end;
+
+procedure TMainForm.SaveCurrentSettings(Sender: TObject);
 var
   LLayout: TWindowLayout;
 begin
@@ -353,6 +361,7 @@ begin
     begin
       FOptions := LForm.Options;
       ApplyOptions;
+      SaveCurrentSettings(Sender);
     end;
   finally
     LForm.Free;

@@ -14,6 +14,7 @@ type
   private
     FBookmarks: TBookmarkList;
     FCurrentPath: string;
+    FOnBookmarksAccepted: TNotifyEvent;
     FOnBookmarkSelect: TBookmarkSelectEvent;
     procedure AddBookmarkClick(Sender: TObject);
     procedure AddMenuItem(const ACaption: string; AOnClick: TNotifyEvent;
@@ -24,6 +25,8 @@ type
   public
     procedure ShowFor(AControl: TControl; const APath: string);
     property Bookmarks: TBookmarkList read FBookmarks write FBookmarks;
+    property OnBookmarksAccepted: TNotifyEvent read FOnBookmarksAccepted
+      write FOnBookmarksAccepted;
     property OnBookmarkSelect: TBookmarkSelectEvent read FOnBookmarkSelect
       write FOnBookmarkSelect;
   end;
@@ -87,7 +90,8 @@ var
 begin
   LEditor := TBookmarkForm.Create(nil);
   try
-    LEditor.EditBookmarks(FBookmarks);
+    if LEditor.EditBookmarks(FBookmarks) and Assigned(FOnBookmarksAccepted) then
+      FOnBookmarksAccepted(Self);
   finally
     LEditor.Free;
   end;
