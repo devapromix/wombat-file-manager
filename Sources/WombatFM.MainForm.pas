@@ -156,6 +156,8 @@ begin
     FPendingLeftPanelWidths[1] := IfThen(LLayout.BottomLeftPanelWidth > 0,
       LLayout.BottomLeftPanelWidth, LLayout.LeftPanelWidth);
     FPendingTopPanelHeight := LLayout.TopPanelHeight;
+    if LLayout.Maximized then
+      WindowState := wsMaximized;
   except
     on E: Exception do
       ShowMessage('Could not load settings: ' + E.Message);
@@ -304,8 +306,15 @@ procedure TMainForm.SaveCurrentSettings(Sender: TObject);
 var
   LLayout: TWindowLayout;
 begin
+  LLayout.Maximized := WindowState = wsMaximized;
   LLayout.Width := Width;
   LLayout.Height := Height;
+  if (WindowState <> wsNormal) and (RestoredWidth > 0) and
+    (RestoredHeight > 0) then
+  begin
+    LLayout.Width := RestoredWidth;
+    LLayout.Height := RestoredHeight;
+  end;
   LLayout.LeftPanelWidth := GetLeftPanel(0).Width;
   LLayout.BottomLeftPanelWidth := GetLeftPanel(1).Width;
   LLayout.TopPanelHeight := pnlTop.Height;
