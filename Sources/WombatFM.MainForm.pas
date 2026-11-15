@@ -5,7 +5,7 @@ unit WombatFM.MainForm;
 interface
 
 uses
-  Classes, SysUtils, Forms, Controls, ComCtrls, ExtCtrls, Menus, WombatFM.FilePanel,
+  Classes, SysUtils, Forms, Controls, ComCtrls, ExtCtrls, Menus, WombatFM.FilePanelFrame,
   WombatFM.BookmarkList, WombatFM.Options;
 
 const

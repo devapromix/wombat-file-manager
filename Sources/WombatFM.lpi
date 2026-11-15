@@ -39,7 +39,7 @@
         <ResourceBaseClass Value="Form"/>
       </Unit>
       <Unit>
-        <Filename Value="WombatFM.FilePanel.pas"/>
+        <Filename Value="WombatFM.FilePanelFrame.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="FilePanelFrame"/>
         <HasResources Value="True"/>

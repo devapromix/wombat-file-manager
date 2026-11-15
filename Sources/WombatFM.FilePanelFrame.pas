@@ -1,4 +1,4 @@
-unit WombatFM.FilePanel;
+unit WombatFM.FilePanelFrame;
 
 {$mode objfpc}{$H+}
 
