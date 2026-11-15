@@ -92,8 +92,8 @@ var
 implementation
 
 uses
-  Dialogs, LCLType, Math, WombatFM.History, WombatFM.NewFolder,
-  WombatFM.Settings;
+  Dialogs, LCLType, Math, WombatFM.History, WombatFM.MessageForm,
+  WombatFM.NewFolder, WombatFM.Settings;
 
 {$R *.lfm}
 
@@ -162,7 +162,7 @@ begin
       WindowState := wsMaximized;
   except
     on E: Exception do
-      ShowMessage('Could not load settings: ' + E.Message);
+      GetMessageResult('Could not load settings: ' + E.Message, mtError);
   end;
   for LIndex := 0 to CPanelCount - 1 do
     FPanels[LIndex].cbPath.Text := LPaths[LIndex];
@@ -326,7 +326,7 @@ begin
     SaveSettings(GetPathLists, FFolderNames, FBookmarks, LLayout, FOptions);
   except
     on E: Exception do
-      ShowMessage('Could not save settings: ' + E.Message);
+      GetMessageResult('Could not save settings: ' + E.Message, mtError);
   end;
 end;
 

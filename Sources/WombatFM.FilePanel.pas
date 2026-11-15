@@ -98,6 +98,9 @@ type
 
 implementation
 
+uses
+  WombatFM.MessageForm;
+
 {$R *.lfm}
 
 const
@@ -508,7 +511,7 @@ begin
   Result := GetIsDirectoryAccessible(APath);
   if not Result then
   begin
-    ShowMessage('Cannot open folder: ' + APath);
+    GetMessageResult('Cannot open folder: ' + APath, mtError);
     cbPath.Text := FCurrentPath;
   end;
 end;
@@ -577,7 +580,7 @@ begin
   ACreated := CreateDirUTF8(LPath);
   if not ACreated then
   begin
-    ShowMessage('Cannot create folder: ' + LPath);
+    GetMessageResult('Cannot create folder: ' + LPath, mtError);
     Exit;
   end;
   Reload;
