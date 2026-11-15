@@ -20,6 +20,8 @@ type
     LeftPanelWidth: Integer;
     BottomLeftPanelWidth: Integer;
     TopPanelHeight: Integer;
+    BookmarkEditorWidth: Integer;
+    BookmarkEditorHeight: Integer;
   end;
 
   TAppOptions = record
@@ -201,6 +203,8 @@ begin
       ALayout.LeftPanelWidth := LLayout.Get('topLeftPanelWidth', 0);
       ALayout.BottomLeftPanelWidth := LLayout.Get('bottomLeftPanelWidth', 0);
       ALayout.TopPanelHeight := LLayout.Get('topPanelHeight', 0);
+      ALayout.BookmarkEditorWidth := LLayout.Get('bookmarkEditorWidth', 0);
+      ALayout.BookmarkEditorHeight := LLayout.Get('bookmarkEditorHeight', 0);
     end;
   finally
     LSettings.Free;
@@ -264,6 +268,8 @@ begin
     LLayout.Integers['topLeftPanelWidth'] := ALayout.LeftPanelWidth;
     LLayout.Integers['bottomLeftPanelWidth'] := ALayout.BottomLeftPanelWidth;
     LLayout.Integers['topPanelHeight'] := ALayout.TopPanelHeight;
+    LLayout.Integers['bookmarkEditorWidth'] := ALayout.BookmarkEditorWidth;
+    LLayout.Integers['bookmarkEditorHeight'] := ALayout.BookmarkEditorHeight;
     SaveOptions(LSettings, AOptions);
     LText := LSettings.FormatJSON + LineEnding;
   finally

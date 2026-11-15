@@ -30,7 +30,7 @@ type
 implementation
 
 uses
-  WombatFM.BookmarkNameForm;
+  Math, WombatFM.BookmarkNameForm;
 
 {$R *.lfm}
 
@@ -49,7 +49,14 @@ begin
     if lbBookmarks.Count > 0 then
       lbBookmarks.ItemIndex := 0;
     UpdateButtons(nil, False);
+    if (ABookmarks.EditorWidth > 0) and (ABookmarks.EditorHeight > 0) then
+    begin
+      Width := Min(ABookmarks.EditorWidth, Screen.WorkAreaWidth);
+      Height := Min(ABookmarks.EditorHeight, Screen.WorkAreaHeight);
+    end;
     Result := ShowModal = mrOK;
+    ABookmarks.EditorWidth := Width;
+    ABookmarks.EditorHeight := Height;
     if Result then
     begin
       ABookmarks.Clear;

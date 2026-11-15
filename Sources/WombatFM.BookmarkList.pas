@@ -14,9 +14,14 @@ type
   end;
 
   TBookmarkList = class(specialize TList<TBookmark>)
+  private
+    FEditorHeight: Integer;
+    FEditorWidth: Integer;
   public
     procedure AddBookmark(const AName, APath: string);
     function IndexOfPath(const APath: string): integer;
+    property EditorHeight: Integer read FEditorHeight write FEditorHeight;
+    property EditorWidth: Integer read FEditorWidth write FEditorWidth;
   end;
 
 function DefaultBookmarkName(const APath: string): string;

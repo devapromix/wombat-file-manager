@@ -149,6 +149,8 @@ begin
   try
     LoadSettings(GetPathLists, FFolderNames, FBookmarks, LLayout, FOptions);
     ApplyOptions;
+    FBookmarks.EditorWidth := LLayout.BookmarkEditorWidth;
+    FBookmarks.EditorHeight := LLayout.BookmarkEditorHeight;
     if (LLayout.Width > 0) and (LLayout.Height > 0) then
       SetBounds(Left, Top, Min(LLayout.Width, Screen.WorkAreaWidth),
         Min(LLayout.Height, Screen.WorkAreaHeight));
@@ -318,6 +320,8 @@ begin
   LLayout.LeftPanelWidth := GetLeftPanel(0).Width;
   LLayout.BottomLeftPanelWidth := GetLeftPanel(1).Width;
   LLayout.TopPanelHeight := pnlTop.Height;
+  LLayout.BookmarkEditorWidth := FBookmarks.EditorWidth;
+  LLayout.BookmarkEditorHeight := FBookmarks.EditorHeight;
   try
     SaveSettings(GetPathLists, FFolderNames, FBookmarks, LLayout, FOptions);
   except
