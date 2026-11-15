@@ -93,7 +93,7 @@ implementation
 
 uses
   Dialogs, LCLType, Math, WombatFM.History, WombatFM.MessageForm,
-  WombatFM.NewFolder, WombatFM.Settings;
+  WombatFM.NewFolderForm, WombatFM.SettingsForm;
 
 {$R *.lfm}
 

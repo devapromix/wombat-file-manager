@@ -46,14 +46,14 @@
         <ResourceBaseClass Value="Frame"/>
       </Unit>
       <Unit>
-        <Filename Value="WombatFM.Settings.pas"/>
+        <Filename Value="WombatFM.SettingsForm.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="SettingsForm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
       </Unit>
       <Unit>
-        <Filename Value="WombatFM.NewFolder.pas"/>
+        <Filename Value="WombatFM.NewFolderForm.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="NewFolderForm"/>
         <HasResources Value="True"/>
