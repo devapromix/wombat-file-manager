@@ -30,7 +30,7 @@ type
 implementation
 
 uses
-  Math, WombatFM.BookmarkNameForm;
+  Math, WombatFM.BookmarkNameForm, WombatFM.MessageForm;
 
 {$R *.lfm}
 
@@ -100,8 +100,8 @@ begin
   LIndex := lbBookmarks.ItemIndex;
   if LIndex < 0 then
     Exit;
-  if MessageDlg('Delete bookmark "' + lbBookmarks.Items[LIndex] + '"?',
-    mtConfirmation, [mbYes, mbNo], 0, mbNo) <> mrYes then
+  if GetMessageResult('Delete bookmark "' + lbBookmarks.Items[LIndex] + '"?',
+    mtConfirmation, [mbYes, mbNo], mbNo, 'Delete bookmark') <> mrYes then
     Exit;
   FBookmarks.Delete(LIndex);
   lbBookmarks.Items.Delete(LIndex);

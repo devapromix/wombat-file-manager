@@ -97,6 +97,13 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
       </Unit>
+      <Unit>
+        <Filename Value="WombatFM.MessageForm.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="MessageForm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
