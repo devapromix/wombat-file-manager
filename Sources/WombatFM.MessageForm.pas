@@ -34,7 +34,7 @@ function GetMessageResult(const AMessage: string; ADialogType: TMsgDlgType = mtI
 implementation
 
 uses
-  Math, LCLType, LCLIntf, DialogRes;
+  Math, LCLType, LCLIntf, ImgList, DialogRes;
 
 {$R *.lfm}
 
@@ -146,6 +146,11 @@ begin
     LBitBtn.Parent := Self;
     LBitBtn.Layout := blGlyphLeft;
     LBitBtn.Kind := GetButtonKind(LButton);
+    if LButton = mbNo then
+    begin
+      LBitBtn.Images := LCLGlyphs;
+      LBitBtn.ImageIndex := GetButtonImageIndex(idButtonCancel);
+    end;
     LBitBtn.Cancel := (FCancelResult <> mrNone) and (LBitBtn.ModalResult = FCancelResult);
     LBitBtn.Default := LButton = ADefaultButton;
     if LBitBtn.Default then

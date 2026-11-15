@@ -5,7 +5,8 @@ unit WombatFM.BookmarkForm;
 interface
 
 uses
-  Classes, SysUtils, Forms, Controls, StdCtrls, ExtCtrls, Dialogs, WombatFM.BookmarkList;
+  Classes, SysUtils, Forms, Controls, StdCtrls, ExtCtrls, Buttons, Dialogs,
+  WombatFM.BookmarkList;
 
 type
   TBookmarkForm = class(TForm)
@@ -15,8 +16,8 @@ type
     btnMoveDown: TButton;
     btnDelete: TButton;
     btnRename: TButton;
-    btnOK: TButton;
-    btnCancel: TButton;
+    btnOK: TBitBtn;
+    btnCancel: TBitBtn;
     procedure UpdateButtons(Sender: TObject; User: boolean);
     procedure MoveBookmark(Sender: TObject);
     procedure DeleteBookmark(Sender: TObject);

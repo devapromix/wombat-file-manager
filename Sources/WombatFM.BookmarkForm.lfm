@@ -68,25 +68,27 @@ object BookmarkForm: TBookmarkForm
       TabOrder = 3
       OnClick = RenameBookmark
     end
-    object btnOK: TButton
+    object btnOK: TBitBtn
       Left = 8
       Height = 30
       Top = 268
       Width = 104
       Anchors = [akLeft, akBottom]
-      Caption = 'OK'
       Default = True
+      DefaultCaption = True
+      Kind = bkOK
       ModalResult = 1
       TabOrder = 4
     end
-    object btnCancel: TButton
+    object btnCancel: TBitBtn
       Left = 8
       Height = 30
       Top = 304
       Width = 104
       Anchors = [akLeft, akBottom]
       Cancel = True
-      Caption = 'Cancel'
+      DefaultCaption = True
+      Kind = bkCancel
       ModalResult = 2
       TabOrder = 5
     end
