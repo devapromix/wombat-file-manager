@@ -636,6 +636,7 @@ end;
 procedure TFilePanelFrame.OpenSelected;
 var
   LEntry: TFileEntry;
+  LOpened: Boolean;
 begin
   if lvFiles.Selected = nil then
     Exit;
@@ -643,7 +644,13 @@ begin
   if LEntry.Name = CParentName then
     GoUp
   else if LEntry.IsFolder then
-    NavigateTo(FCurrentPath + LEntry.Name);
+    NavigateTo(FCurrentPath + LEntry.Name)
+  else
+  begin
+    OpenShellItem(Handle, FCurrentPath, LEntry.Name, LOpened);
+    if not LOpened then
+      GetMessageResult('Cannot open file: ' + FCurrentPath + LEntry.Name, mtError);
+  end;
 end;
 
 procedure TFilePanelFrame.ApplyOptions(const AOptions: TAppOptions);

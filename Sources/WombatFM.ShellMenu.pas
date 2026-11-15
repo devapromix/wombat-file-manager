@@ -7,6 +7,8 @@ interface
 uses
   Classes;
 
+procedure OpenShellItem(AOwner: THandle; const AFolder, AName: string;
+  out AOpened: Boolean);
 procedure ShowShellContextMenu(AOwner: THandle; const AFolder: string;
   ANames: TStrings; const AScreenPoint: TPoint);
 
@@ -79,6 +81,7 @@ const
   CLastCommand = $7FFF;
   CFlagNormal = 0;
   CFlagExtendedVerbs = $100;
+  CShellExecuteMinSuccess = 32;
 
 var
   GContextMenu2: IContextMenu2;
@@ -88,6 +91,10 @@ function SHParseDisplayName(AName: PWideChar; ABindContext: Pointer;
   out APidl: Pointer; AAttributesIn: ULONG;
   out AAttributesOut: ULONG): HRESULT; stdcall;
   external 'shell32.dll' name 'SHParseDisplayName';
+
+function ShellExecuteW(AOwner: HWND; AOperation, AFile, AParameters,
+  ADirectory: PWideChar; AShowMode: Integer): HINST; stdcall;
+  external 'shell32.dll' name 'ShellExecuteW';
 
 function SHBindToParent(APidl: Pointer; const AIid: TGUID; out AObject;
   AChild: PPointer): HRESULT; stdcall;
@@ -231,6 +238,14 @@ begin
     DestroyMenu(LPopup);
     DestroyWindow(LWindow);
   end;
+end;
+
+procedure OpenShellItem(AOwner: THandle; const AFolder, AName: string;
+  out AOpened: Boolean);
+begin
+  AOpened := ShellExecuteW(HWND(AOwner), nil,
+    PWideChar(UTF8ToUTF16(AFolder + AName)), nil,
+    PWideChar(UTF8ToUTF16(AFolder)), SW_SHOWNORMAL) > CShellExecuteMinSuccess;
 end;
 
 procedure ShowShellContextMenu(AOwner: THandle; const AFolder: string;
