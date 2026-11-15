@@ -46,6 +46,8 @@ type
       Item: TListItem; State: TCustomDrawState; Stage: TCustomDrawStage;
       var DefaultDraw: Boolean);
     procedure lvFilesColumnClick(Sender: TObject; Column: TListColumn);
+    procedure lvFilesContextPopup(Sender: TObject; MousePos: TPoint;
+      var Handled: Boolean);
     procedure lvFilesDblClick(Sender: TObject);
     procedure lvFilesKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
     procedure pnlDrivesClick(Sender: TObject);
@@ -64,7 +66,10 @@ type
     procedure DrawCursorItem(AItem: TListItem);
     procedure DriveButtonClick(Sender: TObject);
     procedure FillList;
+    procedure FillSelectedNames(ANames: TStrings);
     function GetCompareResult(AEntry1, AEntry2: TFileEntry): integer;
+    function GetContextItem(const AMousePos: TPoint;
+      out AScreenPoint: TPoint): TListItem;
     function GetInsertIndex(AEntry: TFileEntry): integer;
     function GetIsFolderAvailable(const APath: string): Boolean;
     function GetParentPath(const APath: string): string;
@@ -99,7 +104,7 @@ type
 implementation
 
 uses
-  WombatFM.MessageForm;
+  WombatFM.MessageForm, WombatFM.ShellMenu;
 
 {$R *.lfm}
 
@@ -415,6 +420,39 @@ begin
   end;
 end;
 
+procedure TFilePanelFrame.FillSelectedNames(ANames: TStrings);
+var
+  LIndex: integer;
+  LEntry: TFileEntry;
+begin
+  for LIndex := 0 to lvFiles.Items.Count - 1 do
+    if lvFiles.Items[LIndex].Selected then
+    begin
+      LEntry := TFileEntry(lvFiles.Items[LIndex].Data);
+      if LEntry.Name <> CParentName then
+        ANames.Add(LEntry.Name);
+    end;
+end;
+
+function TFilePanelFrame.GetContextItem(const AMousePos: TPoint;
+  out AScreenPoint: TPoint): TListItem;
+begin
+  if (AMousePos.X < 0) or (AMousePos.Y < 0) then
+  begin
+    Result := lvFiles.ItemFocused;
+    if Result <> nil then
+      AScreenPoint := lvFiles.ClientToScreen(Point(
+        Result.DisplayRect(drLabel).Left, Result.DisplayRect(drBounds).Bottom))
+    else
+      AScreenPoint := lvFiles.ClientToScreen(Point(0, 0));
+  end
+  else
+  begin
+    Result := lvFiles.GetItemAt(AMousePos.X, AMousePos.Y);
+    AScreenPoint := lvFiles.ClientToScreen(AMousePos);
+  end;
+end;
+
 function TFilePanelFrame.GetParentPath(const APath: string): string;
 var
   LCurrent: string;
@@ -707,6 +745,37 @@ begin
     FSortDescending := False;
   end;
   UpdateSortIndicator;
+  Reload;
+end;
+
+procedure TFilePanelFrame.lvFilesContextPopup(Sender: TObject; MousePos: TPoint;
+  var Handled: Boolean);
+var
+  LItem: TListItem;
+  LNames: TStringList;
+  LPoint: TPoint;
+begin
+  Handled := True;
+  LItem := GetContextItem(MousePos, LPoint);
+  if LItem <> nil then
+  begin
+    if TFileEntry(LItem.Data).Name = CParentName then
+      Exit;
+    if not LItem.Selected then
+    begin
+      lvFiles.ClearSelection;
+      LItem.Selected := True;
+    end;
+    lvFiles.ItemFocused := LItem;
+  end;
+  LNames := TStringList.Create;
+  try
+    if LItem <> nil then
+      FillSelectedNames(LNames);
+    ShowShellContextMenu(Handle, FCurrentPath, LNames, LPoint);
+  finally
+    LNames.Free;
+  end;
   Reload;
 end;
 

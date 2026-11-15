@@ -116,6 +116,7 @@ object FilePanelFrame: TFilePanelFrame
     ViewStyle = vsReport
     OnAdvancedCustomDrawItem = lvFilesAdvancedCustomDrawItem
     OnColumnClick = lvFilesColumnClick
+    OnContextPopup = lvFilesContextPopup
     OnDblClick = lvFilesDblClick
     OnEnter = ControlActivated
     OnKeyDown = lvFilesKeyDown

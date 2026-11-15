@@ -76,6 +76,10 @@
         <IsPartOfProject Value="True"/>
       </Unit>
       <Unit>
+        <Filename Value="WombatFM.ShellMenu.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit>
+      <Unit>
         <Filename Value="WombatFM.Bookmarks.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit>
