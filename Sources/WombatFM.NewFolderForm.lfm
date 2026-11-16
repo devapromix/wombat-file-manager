@@ -9,6 +9,7 @@ object NewFolderForm: TNewFolderForm
   ClientHeight = 120
   ClientWidth = 340
   Position = poOwnerFormCenter
+  OnShow = FormShow
   LCLVersion = '4.8.0.0'
   object lblFolderName: TLabel
     Left = 16
@@ -26,6 +27,7 @@ object NewFolderForm: TNewFolderForm
     Width = 308
     ItemHeight = 15
     TabOrder = 0
+    OnChange = FolderNameChanged
   end
   object ButtonPanel: TButtonPanel
     Left = 6
