@@ -164,11 +164,10 @@ begin
       'path', ABookmarks[LIndex].Path]));
 end;
 
-procedure LoadOptions(ASettings: TJSONObject; out AOptions: TAppOptions);
+procedure LoadOptions(ASettings: TJSONObject; var AOptions: TAppOptions);
 var
   LOptions: TJSONObject;
 begin
-  AOptions := GetDefaultOptions;
   if ASettings.Find(COptionsKey, LOptions) then
   begin
     AOptions.OptionMaxPathHistory :=
@@ -189,6 +188,7 @@ var
   LIndex: Integer;
 begin
   ALayout := Default(TWindowLayout);
+  AOptions := GetDefaultOptions;
   LSettings := ReadSettings(SettingsFileName);
   try
     LoadOptions(LSettings, AOptions);
@@ -259,7 +259,14 @@ var
   LStream: THandleStream;
 begin
   LFileName := SettingsFileName;
-  LSettings := ReadSettings(LFileName);
+  try
+    LSettings := ReadSettings(LFileName);
+  except
+    on EInOutError do
+      raise;
+    on Exception do
+      LSettings := TJSONObject.Create;
+  end;
   try
     for LIndex := 0 to CPanelCount - 1 do
       SavePathList(LSettings, CRecentPathsKeys[LIndex], APaths[LIndex]);

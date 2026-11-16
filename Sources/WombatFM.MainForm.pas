@@ -360,6 +360,7 @@ procedure TMainForm.ApplyOptions;
 var
   LIndex: Integer;
 begin
+  TrimRecentPaths(FFolderNames, FOptions.OptionMaxPathHistory);
   for LIndex := 0 to CPanelCount - 1 do
     FPanels[LIndex].ApplyOptions(FOptions);
   SyncLeftPanelRatios(0);
