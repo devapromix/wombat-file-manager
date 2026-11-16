@@ -11,6 +11,7 @@ type
   TSettingsForm = class(TForm)
     ButtonPanel: TButtonPanel;
     cbMaxPathHistory: TComboBox;
+    chkRestorePaths: TCheckBox;
     chkShowHidden: TCheckBox;
     chkSyncSplitters: TCheckBox;
     lblMaxPathHistory: TLabel;
@@ -31,6 +32,7 @@ uses
 function TSettingsForm.GetOptions: TAppOptions;
 begin
   Result.OptionMaxPathHistory := StrToInt(cbMaxPathHistory.Text);
+  Result.OptionRestorePaths := chkRestorePaths.Checked;
   Result.OptionShowHidden := chkShowHidden.Checked;
   Result.OptionSyncSplitters := chkSyncSplitters.Checked;
 end;
@@ -39,6 +41,7 @@ procedure TSettingsForm.SetOptions(const AValue: TAppOptions);
 begin
   cbMaxPathHistory.ItemIndex :=
     Max(0, cbMaxPathHistory.Items.IndexOf(IntToStr(AValue.OptionMaxPathHistory)));
+  chkRestorePaths.Checked := AValue.OptionRestorePaths;
   chkShowHidden.Checked := AValue.OptionShowHidden;
   chkSyncSplitters.Checked := AValue.OptionSyncSplitters;
 end;

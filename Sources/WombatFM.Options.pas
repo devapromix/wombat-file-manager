@@ -26,6 +26,7 @@ type
 
   TAppOptions = record
     OptionMaxPathHistory: Integer;
+    OptionRestorePaths: Boolean;
     OptionShowHidden: Boolean;
     OptionSyncSplitters: Boolean;
   end;
@@ -172,6 +173,8 @@ begin
   begin
     AOptions.OptionMaxPathHistory :=
       Max(1, LOptions.Get('maxPathHistory', AOptions.OptionMaxPathHistory));
+    AOptions.OptionRestorePaths :=
+      LOptions.Get('restorePaths', AOptions.OptionRestorePaths);
     AOptions.OptionShowHidden :=
       LOptions.Get('showHidden', AOptions.OptionShowHidden);
     AOptions.OptionSyncSplitters :=
@@ -239,6 +242,7 @@ var
 begin
   LOptions := GetSettingsSection(ASettings, COptionsKey);
   LOptions.Integers['maxPathHistory'] := AOptions.OptionMaxPathHistory;
+  LOptions.Booleans['restorePaths'] := AOptions.OptionRestorePaths;
   LOptions.Booleans['showHidden'] := AOptions.OptionShowHidden;
   LOptions.Booleans['syncSplitters'] := AOptions.OptionSyncSplitters;
 end;

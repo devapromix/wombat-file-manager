@@ -8,7 +8,6 @@
       <Unit>
         <Filename Value="WombatFM.lpr"/>
         <IsPartOfProject Value="True"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="3"/>
         <CursorPos X="20" Y="11"/>
         <UsageCount Value="26"/>
@@ -74,6 +73,7 @@
       <Unit>
         <Filename Value="WombatFM.Options.pas"/>
         <IsPartOfProject Value="True"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="6"/>
         <UsageCount Value="26"/>
         <Loaded Value="True"/>

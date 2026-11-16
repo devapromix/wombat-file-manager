@@ -166,6 +166,9 @@ begin
   end;
   for LIndex := 0 to CPanelCount - 1 do
     FPanels[LIndex].cbPath.Text := LPaths[LIndex];
+  if FOptions.OptionRestorePaths then
+    for LIndex := 0 to CPanelCount - 1 do
+      FPanels[LIndex].RestoreLastPath;
   OnClose := @FormClose;
   PanelActivate(FilePanelTopLeft);
   ActiveControl := FilePanelTopLeft.lvFiles;

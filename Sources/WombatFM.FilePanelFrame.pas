@@ -94,6 +94,7 @@ type
     procedure GoUp;
     procedure NavigateTo(const APath: string);
     procedure Reload;
+    procedure RestoreLastPath;
     procedure SetActive(AValue: boolean);
     property Bookmarks: TBookmarkList write SetBookmarks;
     property OnBookmarksAccepted: TNotifyEvent write SetOnBookmarksAccepted;
@@ -605,6 +606,22 @@ procedure TFilePanelFrame.Reload;
 begin
   if (FCurrentPath <> '') and GetIsFolderAvailable(FCurrentPath) then
     LoadDirectory(FCurrentPath);
+end;
+
+procedure TFilePanelFrame.RestoreLastPath;
+var
+  LIndex: Integer;
+  LPath: string;
+begin
+  for LIndex := 0 to cbPath.Items.Count - 1 do
+  begin
+    LPath := IncludeTrailingPathDelimiter(cbPath.Items[LIndex]);
+    if GetIsDirectoryAccessible(LPath) then
+    begin
+      LoadDirectory(LPath);
+      Exit;
+    end;
+  end;
 end;
 
 procedure TFilePanelFrame.CreateFolder(const AName: string; out ACreated: Boolean);
