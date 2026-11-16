@@ -129,5 +129,10 @@
         </Win32>
       </Options>
     </Linking>
+    <Other>
+      <CompilerMessages>
+        <IgnoredMessages idx6058="True" idx5071="True" idx5024="True"/>
+      </CompilerMessages>
+    </Other>
   </CompilerOptions>
 </CONFIG>
