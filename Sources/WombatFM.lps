@@ -8,10 +8,9 @@
       <Unit>
         <Filename Value="WombatFM.lpr"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="3"/>
+        <EditorIndex Value="-1"/>
         <CursorPos X="20" Y="11"/>
         <UsageCount Value="26"/>
-        <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="WombatFM.MainForm.pas"/>
@@ -19,7 +18,7 @@
         <ComponentName Value="MainForm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <EditorIndex Value="7"/>
+        <IsVisibleTab Value="True"/>
         <TopLine Value="28"/>
         <CursorPos X="11" Y="45"/>
         <UsageCount Value="26"/>
@@ -32,10 +31,9 @@
         <ComponentName Value="FilePanelFrame"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Frame"/>
+        <EditorIndex Value="-1"/>
         <CursorPos X="18" Y="5"/>
         <UsageCount Value="26"/>
-        <Loaded Value="True"/>
-        <LoadedDesigner Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="WombatFM.SettingsForm.pas"/>
@@ -43,11 +41,9 @@
         <ComponentName Value="SettingsForm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <EditorIndex Value="5"/>
+        <EditorIndex Value="-1"/>
         <CursorPos X="181" Y="31"/>
         <UsageCount Value="26"/>
-        <Loaded Value="True"/>
-        <LoadedDesigner Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="WombatFM.NewFolderForm.pas"/>
@@ -65,25 +61,22 @@
       <Unit>
         <Filename Value="WombatFM.Icons.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="8"/>
+        <EditorIndex Value="-1"/>
         <CursorPos X="37" Y="127"/>
         <UsageCount Value="26"/>
-        <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="WombatFM.Options.pas"/>
         <IsPartOfProject Value="True"/>
-        <IsVisibleTab Value="True"/>
-        <EditorIndex Value="6"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="33" Y="20"/>
         <UsageCount Value="26"/>
-        <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="WombatFM.History.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="4"/>
+        <EditorIndex Value="-1"/>
         <UsageCount Value="26"/>
-        <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="WombatFM.ShellMenu.pas"/>
@@ -93,10 +86,9 @@
       <Unit>
         <Filename Value="WombatFM.Bookmarks.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="1"/>
+        <EditorIndex Value="-1"/>
         <TopLine Value="53"/>
         <UsageCount Value="23"/>
-        <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="WombatFM.BookmarkForm.pas"/>
@@ -104,12 +96,10 @@
         <ComponentName Value="BookmarkForm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <EditorIndex Value="2"/>
+        <EditorIndex Value="-1"/>
         <TopLine Value="44"/>
         <CursorPos X="3" Y="52"/>
         <UsageCount Value="23"/>
-        <Loaded Value="True"/>
-        <LoadedDesigner Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="WombatFM.BookmarkList.pas"/>
@@ -133,7 +123,7 @@
         <UsageCount Value="21"/>
       </Unit>
     </Units>
-    <JumpHistory HistoryIndex="18">
+    <JumpHistory HistoryIndex="8">
       <Position>
         <Filename Value="WombatFM.MainForm.pas"/>
       </Position>
@@ -154,13 +144,6 @@
         <Caret Line="81" Column="61" TopLine="58"/>
       </Position>
       <Position>
-        <Filename Value="WombatFM.FilePanelFrame.pas"/>
-      </Position>
-      <Position>
-        <Filename Value="WombatFM.FilePanelFrame.pas"/>
-        <Caret Line="566" Column="3" TopLine="564"/>
-      </Position>
-      <Position>
         <Filename Value="WombatFM.MainForm.pas"/>
         <Caret Line="51" Column="54"/>
       </Position>
@@ -169,44 +152,12 @@
         <Caret Line="190" Column="26" TopLine="162"/>
       </Position>
       <Position>
-        <Filename Value="WombatFM.FilePanelFrame.pas"/>
-        <Caret Line="584" Column="52"/>
-      </Position>
-      <Position>
-        <Filename Value="WombatFM.FilePanelFrame.pas"/>
-        <Caret Line="103" Column="17" TopLine="75"/>
-      </Position>
-      <Position>
-        <Filename Value="WombatFM.FilePanelFrame.pas"/>
-        <Caret Line="47" Column="19"/>
-      </Position>
-      <Position>
-        <Filename Value="WombatFM.FilePanelFrame.pas"/>
-        <Caret Line="39" Column="24" TopLine="22"/>
-      </Position>
-      <Position>
         <Filename Value="WombatFM.MainForm.pas"/>
         <Caret Line="72" Column="46" TopLine="56"/>
       </Position>
       <Position>
-        <Filename Value="WombatFM.FilePanelFrame.pas"/>
-        <Caret Line="53" Column="27" TopLine="25"/>
-      </Position>
-      <Position>
-        <Filename Value="WombatFM.FilePanelFrame.pas"/>
-        <Caret Line="606" Column="3" TopLine="604"/>
-      </Position>
-      <Position>
-        <Filename Value="WombatFM.FilePanelFrame.pas"/>
-        <Caret Line="608" Column="3" TopLine="606"/>
-      </Position>
-      <Position>
         <Filename Value="WombatFM.MainForm.pas"/>
         <Caret Line="45" Column="11" TopLine="28"/>
-      </Position>
-      <Position>
-        <Filename Value="WombatFM.BookmarkForm.pas"/>
-        <Caret Line="52" Column="3" TopLine="44"/>
       </Position>
     </JumpHistory>
     <RunParams>

@@ -22,7 +22,7 @@ type
     Size: DWORD;
     Mask: DWORD;
     Owner: HWND;
-    Verb: PAnsiChar;
+    Verb: PtrUInt;
     Parameters: PAnsiChar;
     Directory: PAnsiChar;
     ShowMode: Integer;
@@ -150,6 +150,8 @@ var
   LChild: Pointer;
 begin
   Result := nil;
+  LPidls := nil;
+  LChildren := nil;
   LPaths := TStringList.Create;
   try
     if ANames.Count = 0 then
@@ -225,10 +227,10 @@ begin
     PostMessage(LWindow, WM_NULL, 0, 0);
     if LCommand >= CFirstCommand then
     begin
-      FillChar(LInfo, SizeOf(LInfo), 0);
+      LInfo := Default(TInvokeCommandInfo);
       LInfo.Size := SizeOf(LInfo);
       LInfo.Owner := AOwner;
-      LInfo.Verb := PAnsiChar(PtrUInt(LCommand - CFirstCommand));
+      LInfo.Verb := PtrUInt(LCommand - CFirstCommand);
       LInfo.ShowMode := SW_SHOWNORMAL;
       LContextMenu.InvokeCommand(LInfo);
     end;
@@ -266,7 +268,7 @@ procedure RegisterWindowClass;
 var
   LClass: TWndClass;
 begin
-  FillChar(LClass, SizeOf(LClass), 0);
+  LClass := Default(TWndClass);
   LClass.lpfnWndProc := @ShellMenuWindowProc;
   LClass.hInstance := HInstance;
   LClass.lpszClassName := PChar(CWindowClassName);

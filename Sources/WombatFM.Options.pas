@@ -40,7 +40,7 @@ procedure SaveSettings(const APaths: TPathLists; AFolderNames: TStrings; ABookma
 implementation
 
 uses
-  fpjson, jsonparser, Math, LazFileUtils, LazUTF8{$IFDEF WINDOWS}, Windows{$ENDIF},
+  fpjson, jsonparser, LazFileUtils, LazUTF8{$IFDEF WINDOWS}, Windows{$ENDIF},
   WombatFM.History;
 
 const

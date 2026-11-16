@@ -183,6 +183,8 @@ begin
     begin
       LBitBtn := TBitBtn(Controls[LIndex]);
       LBitBtn.HandleNeeded;
+      LPreferredWidth := 0;
+      LPreferredHeight := 0;
       LBitBtn.GetPreferredSize(LPreferredWidth, LPreferredHeight);
       LButtonWidth := Max(LButtonWidth, LPreferredWidth);
       LButtonHeight := Max(LButtonHeight, LPreferredHeight);

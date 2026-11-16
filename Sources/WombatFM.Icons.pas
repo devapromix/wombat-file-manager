@@ -14,7 +14,7 @@ function GetParentIconIndex: Integer;
 implementation
 
 uses
-  Classes, SysUtils, Types{$IFDEF WINDOWS}, Windows, ShellApi{$ENDIF}, Graphics;
+  Classes, SysUtils{$IFDEF WINDOWS}, Windows, ShellApi{$ENDIF}, Graphics;
 
 const
   CIconSize = 16;
