@@ -34,6 +34,8 @@ type
     tbHome: TToolButton;
     tbDownloads: TToolButton;
     tbNewFolder: TToolButton;
+    tbPaste: TToolButton;
+    PasteTimer: TTimer;
     tbRefresh: TToolButton;
     tbUp: TToolButton;
     tlbMain: TToolBar;
@@ -56,6 +58,8 @@ type
     procedure tbHomeClick(Sender: TObject);
     procedure tbDownloadsClick(Sender: TObject);
     procedure tbNewFolderClick(Sender: TObject);
+    procedure tbPasteClick(Sender: TObject);
+    procedure UpdatePasteButton(Sender: TObject);
     procedure tbRefreshClick(Sender: TObject);
     procedure tbUpClick(Sender: TObject);
   private
@@ -93,7 +97,7 @@ implementation
 
 uses
   Dialogs, LCLType, Math, WombatFM.History, WombatFM.MessageForm,
-  WombatFM.NewFolderForm, WombatFM.SettingsForm;
+  LazFileUtils, WombatFM.NewFolderForm, WombatFM.SettingsForm, WombatFM.ShellMenu;
 
 {$R *.lfm}
 
@@ -420,6 +424,28 @@ begin
   LDownloadsPath := IncludeTrailingPathDelimiter(GetUserDir) + 'Downloads';
   if DirectoryExists(LDownloadsPath) then
     FActivePanel.NavigateTo(LDownloadsPath);
+end;
+
+procedure TMainForm.UpdatePasteButton(Sender: TObject);
+begin
+  tbPaste.Enabled := Assigned(FActivePanel) and
+    (FActivePanel.CurrentPath <> '') and ClipboardHasFiles;
+end;
+
+procedure TMainForm.tbPasteClick(Sender: TObject);
+var
+  LPanel: TFilePanelFrame;
+  LPath: string;
+begin
+  UpdatePasteButton(Sender);
+  if not tbPaste.Enabled then
+    Exit;
+  LPanel := FActivePanel;
+  LPath := LPanel.CurrentPath;
+  if not DirectoryExistsUTF8(LPath) or not PasteShellFiles(Handle, LPath) then
+    GetMessageResult('Cannot paste files into: ' + LPath, mtError);
+  LPanel.Reload;
+  UpdatePasteButton(Sender);
 end;
 
 procedure TMainForm.tbNewFolderClick(Sender: TObject);

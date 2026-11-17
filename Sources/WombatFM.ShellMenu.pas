@@ -7,6 +7,8 @@ interface
 uses
   Classes;
 
+function ClipboardHasFiles: Boolean;
+function PasteShellFiles(AOwner: THandle; const AFolder: string): Boolean;
 procedure OpenShellItem(AOwner: THandle; const AFolder, AName: string;
   out AOpened: Boolean);
 procedure ShowShellContextMenu(AOwner: THandle; const AFolder: string;
@@ -82,6 +84,7 @@ const
   CFlagNormal = 0;
   CFlagExtendedVerbs = $100;
   CShellExecuteMinSuccess = 32;
+  CInvokeNoAsync = $100;
 
 var
   GContextMenu2: IContextMenu2;
@@ -239,6 +242,57 @@ begin
     GContextMenu2 := nil;
     DestroyMenu(LPopup);
     DestroyWindow(LWindow);
+  end;
+end;
+
+function ClipboardHasFiles: Boolean;
+begin
+  Result := IsClipboardFormatAvailable(CF_HDROP);
+end;
+
+function PasteShellFiles(AOwner: THandle; const AFolder: string): Boolean;
+var
+  LComResult: HRESULT;
+  LNames: TStringList;
+  LContextMenu: IContextMenu;
+  LMenu: HMENU;
+  LInfo: TInvokeCommandInfo;
+  LVerb: AnsiString;
+begin
+  Result := False;
+  LComResult := CoInitialize(nil);
+  if LComResult < 0 then
+    Exit;
+  try
+    LNames := TStringList.Create;
+    try
+      LContextMenu := GetContextMenu(HWND(AOwner), AFolder, LNames);
+    finally
+      LNames.Free;
+    end;
+    if LContextMenu = nil then
+      Exit;
+    LMenu := CreatePopupMenu;
+    if LMenu = 0 then
+      Exit;
+    try
+      if LContextMenu.QueryContextMenu(LMenu, 0, CFirstCommand, CLastCommand,
+        CFlagNormal) < 0 then
+        Exit;
+      LVerb := 'paste';
+      LInfo := Default(TInvokeCommandInfo);
+      LInfo.Size := SizeOf(LInfo);
+      LInfo.Mask := CInvokeNoAsync;
+      LInfo.Owner := HWND(AOwner);
+      LInfo.Verb := PtrUInt(PAnsiChar(LVerb));
+      LInfo.ShowMode := SW_SHOWNORMAL;
+      Result := LContextMenu.InvokeCommand(LInfo) >= 0;
+    finally
+      DestroyMenu(LMenu);
+    end;
+  finally
+    LContextMenu := nil;
+    CoUninitialize;
   end;
 end;
 

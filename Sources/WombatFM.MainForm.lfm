@@ -80,6 +80,13 @@ object MainForm: TMainForm
       Caption = 'New Folder'
       OnClick = tbNewFolderClick
     end
+    object tbPaste: TToolButton
+      Left = 505
+      Top = 2
+      Caption = 'Paste'
+      Enabled = False
+      OnClick = tbPasteClick
+    end
   end
   object pnlTop: TPanel
     Left = 0
@@ -632,6 +639,10 @@ object MainForm: TMainForm
       14B95F09399D79B279B31C7FE27FEF133FF31C81DBA8FDCD19230D6BD2471A55
       677C15D0BCD83CD9BCB9E67FFE775E9F5EFF0783324930
     }
+  end
+  object PasteTimer: TTimer
+    Interval = 200
+    OnTimer = UpdatePasteButton
   end
   object MainMenu: TMainMenu
     Left = 488
