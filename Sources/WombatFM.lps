@@ -18,7 +18,6 @@
         <ComponentName Value="MainForm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <IsVisibleTab Value="True"/>
         <TopLine Value="371"/>
         <CursorPos X="19" Y="441"/>
         <UsageCount Value="26"/>
@@ -31,9 +30,12 @@
         <ComponentName Value="FilePanelFrame"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Frame"/>
-        <EditorIndex Value="-1"/>
+        <IsVisibleTab Value="True"/>
+        <EditorIndex Value="1"/>
         <CursorPos X="18" Y="5"/>
         <UsageCount Value="26"/>
+        <Loaded Value="True"/>
+        <LoadedDesigner Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="WombatFM.SettingsForm.pas"/>
@@ -123,7 +125,7 @@
         <UsageCount Value="21"/>
       </Unit>
     </Units>
-    <JumpHistory HistoryIndex="8">
+    <JumpHistory HistoryIndex="9">
       <Position>
         <Filename Value="WombatFM.MainForm.pas"/>
       </Position>
@@ -158,6 +160,10 @@
       <Position>
         <Filename Value="WombatFM.MainForm.pas"/>
         <Caret Line="45" Column="11" TopLine="28"/>
+      </Position>
+      <Position>
+        <Filename Value="WombatFM.FilePanelFrame.pas"/>
+        <Caret Line="5" Column="18"/>
       </Position>
     </JumpHistory>
     <RunParams>

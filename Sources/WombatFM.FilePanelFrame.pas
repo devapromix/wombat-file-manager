@@ -28,6 +28,7 @@ type
   TFilePanelFrame = class(TFrame)
     btnBookmarks: TButton;
     btnBrowse1: TButton;
+    btnUp: TButton;
     btnRoot: TButton;
     cbPath: TComboBox;
     dlgSelectDir: TSelectDirectoryDialog;
@@ -38,6 +39,7 @@ type
     procedure btnBookmarksClick(Sender: TObject);
     procedure btnBrowseClick(Sender: TObject);
     procedure btnRootClick(Sender: TObject);
+    procedure btnUpClick(Sender: TObject);
     procedure cbPathChange(Sender: TObject);
     procedure cbPathKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
     procedure cbPathSelect(Sender: TObject);
@@ -697,6 +699,11 @@ end;
 procedure TFilePanelFrame.btnRootClick(Sender: TObject);
 begin
   NavigateTo(ExtractFileDrive(FCurrentPath) + PathDelim);
+end;
+
+procedure TFilePanelFrame.btnUpClick(Sender: TObject);
+begin
+  GoUp;
 end;
 
 procedure TFilePanelFrame.cbPathChange(Sender: TObject);

@@ -7,8 +7,8 @@ object FilePanelFrame: TFilePanelFrame
   ClientWidth = 768
   LCLVersion = '4.8.0.0'
   TabOrder = 0
-  DesignLeft = 960
-  DesignTop = 284
+  DesignLeft = 535
+  DesignTop = 365
   object sbStatus: TStatusBar
     Left = 0
     Height = 23
@@ -27,6 +27,17 @@ object FilePanelFrame: TFilePanelFrame
     ClientWidth = 768
     TabOrder = 1
     OnClick = pnlDrivesClick
+    object btnUp: TButton
+      Left = 722
+      Height = 23
+      Top = 0
+      Width = 23
+      Align = alRight
+      Caption = '..'
+      TabOrder = 0
+      OnClick = btnUpClick
+      OnEnter = ControlActivated
+    end
     object btnRoot: TButton
       Left = 745
       Height = 23
@@ -34,7 +45,7 @@ object FilePanelFrame: TFilePanelFrame
       Width = 23
       Align = alRight
       Caption = '\'
-      TabOrder = 0
+      TabOrder = 1
       OnClick = btnRootClick
       OnEnter = ControlActivated
     end
