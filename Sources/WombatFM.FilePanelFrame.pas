@@ -734,8 +734,16 @@ var
 begin
   LRect := AItem.DisplayRect(drBounds);
   lvFiles.Canvas.Brush.Style := bsSolid;
-  lvFiles.Canvas.Brush.Color := lvFiles.Color;
-  lvFiles.Canvas.Font.Color := lvFiles.Font.Color;
+  if AItem.Selected then
+  begin
+    lvFiles.Canvas.Brush.Color := clHighlight;
+    lvFiles.Canvas.Font.Color := clHighlightText;
+  end
+  else
+  begin
+    lvFiles.Canvas.Brush.Color := lvFiles.Color;
+    lvFiles.Canvas.Font.Color := lvFiles.Font.Color;
+  end;
   lvFiles.Canvas.FillRect(LRect);
   LTextTop := LRect.Top + (LRect.Bottom - LRect.Top -
     lvFiles.Canvas.TextHeight('Wg')) div 2;
